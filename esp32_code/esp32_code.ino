@@ -4,59 +4,60 @@
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
+#define OLED_RESET -1
 
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
-
-// ----------------------------
-// DUMMY DATA (exemple bitmap)
-// ----------------------------
-
-// Bitmap 16x16 pixels (motif simple)
-static const uint8_t dummyBitmap[] = {
-  0b11111111, 0b11111111,
-  0b10000000, 0b00000001,
-  0b10111111, 0b11111001,
-  0b10100000, 0b00001001,
-  0b10101111, 0b11101001,
-  0b10101000, 0b00101001,
-  0b10101011, 0b10101001,
-  0b10101000, 0b00101001,
-  0b10101111, 0b11101001,
-  0b10100000, 0b00001001,
-  0b10111111, 0b11111001,
-  0b10000000, 0b00000001,
-  0b11111111, 0b11111111,
-  0b00000000, 0b00000000,
-  0b11110000, 0b00001111,
-  0b11111111, 0b11111111
-};
-
-const int dummyWidth = 16;
-const int dummyHeight = 16;
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 void setup() {
   Serial.begin(115200);
+  delay(500);
+  Serial.println("\n=== TEST SIMPLE ===");
 
-  Wire.begin(21, 22); // SDA = 21, SCL = 22
+  Wire.begin(21, 22);
+
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println("Écran OLED introuvable !");
-    while (true);
+    Serial.println("Erreur OLED!");
+    while (1);
   }
 
+  Serial.println("Écran OK");
+  
+  // TEST: Afficher quelque chose de très simple
   display.clearDisplay();
-
-  // ----------------------------
-  // Affichage du DUMMY BITMAP
-  // ----------------------------
-  display.drawBitmap(
-    50, 20,              // Position X, Y
-    dummyBitmap,         // Notre dummy data
-    dummyWidth,          // Largeur
-    dummyHeight,         // Hauteur
-    SSD1306_WHITE        // Couleur
-  );
-
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(10, 20);
+  display.println("TEST");
   display.display();
+  
+  delay(2000);
+  
+  // Maintenant un pattern simple
+  display.clearDisplay();
+  
+  // Dessiner un damier simple au centre
+  int startX = 32;
+  int startY = 0;
+  int boxSize = 8;
+  
+  for (int y = 0; y < 8; y++) {
+    for (int x = 0; x < 8; x++) {
+      if ((x + y) % 2 == 0) {
+        display.fillRect(startX + x*boxSize, startY + y*boxSize, boxSize, boxSize, WHITE);
+      }
+    }
+  }
+  
+  display.display();
+  
+  Serial.println("Pattern affiché");
+  Serial.println("\nPouvez-vous voir:");
+  Serial.println("1. Le texte 'TEST'?");
+  Serial.println("2. Le damier noir et blanc?");
+  Serial.println("\nSi OUI: L'écran fonctionne bien");
+  Serial.println("Si NON: Problème matériel avec l'écran");
 }
 
-void loop() {}
+void loop() {
+  delay(1000);
+}
