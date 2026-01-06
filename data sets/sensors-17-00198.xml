@@ -1,0 +1,3686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD Journal Publishing DTD v2.3 20070202//EN" "journalpublishing.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en" dtd-version="2.3" article-type="research-article">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="publisher-id">sensors</journal-id>
+      <journal-title>Sensors</journal-title>
+      <abbrev-journal-title abbrev-type="publisher">Sensors</abbrev-journal-title>
+      <abbrev-journal-title abbrev-type="pubmed">Sensors</abbrev-journal-title>
+      <issn pub-type="epub">1424-8220</issn>
+      <publisher>
+        <publisher-name>MDPI</publisher-name>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="doi">10.3390/s17010198</article-id>
+      <article-id pub-id-type="publisher-id">sensors-17-00198</article-id>
+      <article-categories>
+        <subj-group>
+          <subject>Article</subject>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>SisFall: A Fall and Movement Dataset</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Sucerquia</surname>
+            <given-names>Angela</given-names>
+          </name>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>L&#xF3;pez</surname>
+            <given-names>Jos&#xE9; David</given-names>
+          </name>
+          <xref rid="c1-sensors-17-00198" ref-type="corresp">*</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Vargas-Bonilla</surname>
+            <given-names>Jes&#xFA;s Francisco</given-names>
+          </name>
+        </contrib>
+        <contrib contrib-type="editor">
+          <name>
+            <surname>Passaro</surname>
+            <given-names>Vittorio M. N.</given-names>
+          </name>
+          <role>Academic Editor</role>
+        </contrib>
+      </contrib-group>
+      <aff id="af1-sensors-17-00198">SISTEMIC, Facultad de Ingenier&#xED;a, Universidad de Antiquia UDEA, Calle 70 No. 52-21, 1226 Medell&#xED;n, Colombia</aff>
+      <author-notes>
+        <corresp id="c1-sensors-17-00198"><label>*</label>Correspondence: <email>josedavid@udea.edu.co</email>; Tel.: +57-4-219-8561</corresp>
+      </author-notes>
+      <pub-date pub-type="epub">
+        <day>20</day>
+        <month>01</month>
+        <year>2017</year>
+      </pub-date>
+      <pub-date pub-type="collection">        <month>01</month>
+        <year>2017</year>
+      </pub-date>
+      <volume>17</volume>
+      <issue>1</issue>
+      <elocation-id>198</elocation-id>
+      <history>
+        <date date-type="received">
+          <day>22</day>
+          <month>10</month>
+          <year>2016</year>
+        </date>
+        <date date-type="accepted">
+          <day>03</day>
+          <month>01</month>
+          <year>2017</year>
+        </date>
+      </history>
+      <permissions>
+        <copyright-statement>&#xA9; 2017 by the authors; licensee MDPI, Basel, Switzerland.</copyright-statement>
+        <copyright-year>2017</copyright-year>
+        <license>
+          <p>This article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license (http://creativecommons.org/licenses/by/4.0/).</p>
+        </license>
+      </permissions>
+      <abstract>
+        <p>Research on fall and movement detection with wearable devices has witnessed promising growth. However, there are few publicly available datasets, all recorded with smartphones, which are insufficient for testing new proposals due to their absence of objective population, lack of performed activities, and limited information. Here, we present a dataset of falls and activities of daily living (ADLs) acquired with a self-developed device composed of two types of accelerometer and one gyroscope. It consists of 19 ADLs and 15 fall types performed by 23 young adults, 15 ADL types performed by 14 healthy and independent participants over 62 years old, and data from one participant of 60 years old that performed all ADLs and falls. These activities were selected based on a survey and a literature analysis. We test the dataset with widely used feature extraction and a simple to implement threshold based classification, achieving up to 96% of accuracy in fall detection. An individual activity analysis demonstrates that most errors coincide in a few number of activities where new approaches could be focused. Finally, validation tests with elderly people significantly reduced the fall detection performance of the tested features. This validates findings of other authors and encourages developing new strategies with this new dataset as the benchmark.</p>
+      </abstract>
+      <kwd-group>
+        <kwd>triaxial accelerometer</kwd>
+        <kwd>wearable devices</kwd>
+        <kwd>fall detection</kwd>
+        <kwd>mobile health-care</kwd>
+        <kwd>SisFall</kwd>
+      </kwd-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec sec-type="intro" id="sec1-sensors-17-00198">
+      <title>1. Introduction</title>
+      <p>The number of elderly people living alone has been continuously growing worldwide. This independence comes with the risk of not receiving prompt attention if an accident occurs. A third of the people over 65 years old suffer on average one fall per year [<xref ref-type="bibr" rid="B1-sensors-17-00198">1</xref>], and this number grows with age [<xref ref-type="bibr" rid="B2-sensors-17-00198">2</xref>] and previous falls, where about one third develop fear of falling again [<xref ref-type="bibr" rid="B3-sensors-17-00198">3</xref>,<xref ref-type="bibr" rid="B4-sensors-17-00198">4</xref>]. Not receiving attention in the first hour of the accident increases the risk of death and chronic affections [<xref ref-type="bibr" rid="B5-sensors-17-00198">5</xref>]. This issue has been widely addressed in recent years with systems that detect falls in elderly people, and generate a prompt alert that can reduce the consequences related to medical attention response time [<xref ref-type="bibr" rid="B6-sensors-17-00198">6</xref>]. These systems have acceptance among the objective population as a way to support their independence and reduce their fear of falling [<xref ref-type="bibr" rid="B7-sensors-17-00198">7</xref>].</p>
+      <p>Developers of fall detection systems are currently facing several challenges. Independently of the acquisition strategy, most works are not tested with the objective population (elderly people), reducing their accuracy in real-life applications [<xref ref-type="bibr" rid="B8-sensors-17-00198">8</xref>]. Moreover, all public datasets exclusively contain data from young adults, making it difficult to test new proposals [<xref ref-type="bibr" rid="B9-sensors-17-00198">9</xref>]. Here, we make publicly available a dataset with falls and activities of daily living (ADLs) acquired with a wearable device, and we provide results of some of the most commonly used detection features with both young and elderly people. The purpose of this work is to provide a benchmark for other researchers on the fall and movement detection field, and to address two rarely discussed open issues: training with young people features intended for elderly people, and setting-up algorithms for maximum accuracy instead of maximum sensitivity.</p>
+      <p>Falls are commonly detected with wearable or ambient-based systems (see [<xref ref-type="bibr" rid="B6-sensors-17-00198">6</xref>,<xref ref-type="bibr" rid="B9-sensors-17-00198">9</xref>,<xref ref-type="bibr" rid="B10-sensors-17-00198">10</xref>,<xref ref-type="bibr" rid="B11-sensors-17-00198">11</xref>,<xref ref-type="bibr" rid="B12-sensors-17-00198">12</xref>] for reviews in the field). Ambient-based sensors such as cameras are intrusive and do not solve the problem for independent adults, who are not confined to closed spaces. According to [<xref ref-type="bibr" rid="B2-sensors-17-00198">2</xref>], up to 50% of the falls in independent elderly people occur outside the home premises. Wearable devices offer portability as they can be used regardless of the user location. Available wearable devices include smartphone apps and self-developed systems. In both cases, the preferred sensor is the triaxial accelerometer because of its low cost, small size, and because it is built-in in almost all smartphones [<xref ref-type="bibr" rid="B6-sensors-17-00198">6</xref>]. Smartphones are a popular selection for authors because they include a robust hardware, a powerful processor, and they are economically affordable [<xref ref-type="bibr" rid="B6-sensors-17-00198">6</xref>,<xref ref-type="bibr" rid="B11-sensors-17-00198">11</xref>]. However, the low cost of the individual components and design tools has encouraged authors to develop their own embedded devices too [<xref ref-type="bibr" rid="B13-sensors-17-00198">13</xref>].</p>
+      <p>Independently of the device used, authors have faced problems such as energy consumption, battery life, false positives (the alarm turns on with ADL), false negatives (the alarm does not turn on with falls), and user comfort issues. Specifically for smartphones, these devices are not designed for constant use of the processor and sensors (the battery goes off in a couple of hours [<xref ref-type="bibr" rid="B11-sensors-17-00198">11</xref>]). Additionally, the smartphone may get hits and falls caused by manipulation, or the person may forget it in a table after calling, making it less feasible for permanent monitoring.</p>
+      <p>New strategies for solving the aforementioned problems require testing. It requires acquiring datasets with common types of falls and ADLs. In this sense, some authors analyzed how elderly people fall. Back in 1993, authors in [<xref ref-type="bibr" rid="B5-sensors-17-00198">5</xref>] performed a wide survey with 704 women over 65 years old. They reported that most falls were caused by trips, slips and loss of balance. However, they did not record data. About the conditions of the fall, in [<xref ref-type="bibr" rid="B14-sensors-17-00198">14</xref>], the authors found that women were three times more likely to hit the ground on the hips than men, and that most people fell in a forward direction with 60% of prevalence. Most activities currently selected for testing algorithms are based on these studies.</p>
+      <p>Once the selected ADL and falls are simulated and recorded, the raw acceleration data must be processed and classified. Authors commonly filter the data, apply a feature extraction, and classify activities as falls or ADL. The literature provides a wide number of features (see [<xref ref-type="bibr" rid="B9-sensors-17-00198">9</xref>], Table 4 and [<xref ref-type="bibr" rid="B12-sensors-17-00198">12</xref>], Table 2 for complete lists). Unfortunately, there are not works in the literature tested with independent elderly people (see [<xref ref-type="bibr" rid="B9-sensors-17-00198">9</xref>], Table 1, and [<xref ref-type="bibr" rid="B12-sensors-17-00198">12</xref>], Table 4) and available public datasets were all recorded exclusively with young adults. In [<xref ref-type="bibr" rid="B8-sensors-17-00198">8</xref>], for example, authors tested 13 state-of-the-art approaches with real elderly people falls, and they found that the performance of these approaches severely decreased under real-life conditions. However, they did not release the validation dataset, i.e., other authors cannot analyze why those features reduced their performance, and, more importantly, how to solve it. To our knowledge, there only exist four public datasets, all acquired using smartphones: Mobifall [<xref ref-type="bibr" rid="B15-sensors-17-00198">15</xref>], tFall [<xref ref-type="bibr" rid="B16-sensors-17-00198">16</xref>], DLR [<xref ref-type="bibr" rid="B17-sensors-17-00198">17</xref>], and project gravity [<xref ref-type="bibr" rid="B18-sensors-17-00198">18</xref>]. Igual et al. [<xref ref-type="bibr" rid="B19-sensors-17-00198">19</xref>] compared the former three and found severe variability and performance issues of the analyzed algorithms.</p>
+      <p>In this paper, we present and make publicly available a complete dataset of falls and ADL acquired with a self-developed embedded device that can be easily replicated (see [<xref ref-type="bibr" rid="B20-sensors-17-00198">20</xref>,<xref ref-type="bibr" rid="B21-sensors-17-00198">21</xref>] for example designs). It includes young adults and elderly people performing a wide variety of activities selected from a survey and previous studies. The dataset contains 19 types of ADLs and 15 types of falls. It includes acceleration (from two accelerometers) and rotation (from a gyroscope) data from 38 volunteers divided into two groups: 23 adults between 19 and 30 years old, and 15 elderly people between 60 and 75 years old. The dataset is available for free download as <xref ref-type="app" rid="app1-sensors-17-00198">Supplementary Materials</xref> [<xref ref-type="bibr" rid="B22-sensors-17-00198">22</xref>], and videos of each type of activity within the dataset are also included for helping the reader to replicate this work. Additionally, a comparative analysis between several features used in the literature is presented as a reference for future works.</p>
+    </sec>
+    <sec id="sec2-sensors-17-00198">
+      <title>2. Related Public Datasets</title>
+      <p>Our search on public datasets of falls and ADLs was focused on wearable devices, as ambient based and video fall detection systems are too restrictive to help independent elderly people (the objective population of this work). We also considered some basic requirements for a dataset to be useful: all activities must be well documented, the raw data must be freely available, the dataset must contain both falls and ADLs ([<xref ref-type="bibr" rid="B23-sensors-17-00198">23</xref>], for example, examining several public datasets, but none including falls), and it must be reported in a peer-reviewed paper. Following these premises, we found four datasets:<list list-type="bullet">
+        <list-item>
+          <p>MobiFall [<xref ref-type="bibr" rid="B15-sensors-17-00198">15</xref>]: twenty-four volunteers (22 to 42 years old) performed nine types of ADLs and four of falls using a Samsung Galaxy smartphone, Samsung, Seoul, South Korea. Nine subjects performed falls and ADLs, while 15 performed only falls (three trials each).</p>
+        </list-item>
+        <list-item>
+          <p>tFall [<xref ref-type="bibr" rid="B16-sensors-17-00198">16</xref>]: ten participants between 20 and 42 years old. They recorded eight types of falls (503 total recordings with two smartphones), and one week of continuous ADL recordings with all participants carrying smartphones in the pockets and a handbag. The ADL trials were not identified by activity.</p>
+        </list-item>
+        <list-item>
+          <p>DLR [<xref ref-type="bibr" rid="B17-sensors-17-00198">17</xref>]: sixteen subjects (23 to 50 years old). They recorded six types of ADLs, and the authors did not specify the conditions of the falls (they belong to a single group). The files are too short for some types of analysis.</p>
+        </list-item>
+        <list-item>
+          <p>Project gravity [<xref ref-type="bibr" rid="B18-sensors-17-00198">18</xref>]: three participants (ages 22, 26, and 32) performed 12 types of falls and seven types of ADLs with a smartphone in the pocket.</p>
+        </list-item>
+      </list></p>
+      <p>None of these datasets includes elderly people, and their variety of activities and number of subjects is limited compared to this work. Additionally, all authors used smartphones in the pocket for recordings. Here, we fixed our device as a belt buckle as recommended in previous works [<xref ref-type="bibr" rid="B24-sensors-17-00198">24</xref>,<xref ref-type="bibr" rid="B25-sensors-17-00198">25</xref>].</p>
+    </sec>
+    <sec id="sec3-sensors-17-00198">
+      <title>3. Materials and Methods</title>
+      <sec id="sec3dot1-sensors-17-00198">
+        <title>3.1. Selection of Activities</title>
+        <p>Additionally to those falls and ADLs commonly tested in the literature (see [<xref ref-type="bibr" rid="B9-sensors-17-00198">9</xref>], Table 4), we performed a survey with elderly people living alone and administrative personnel from retirement homes. The survey consisted of three main questions: For each fall incident, (<italic>i</italic>) which activity were you performing when the fall happened? (<italic>ii</italic>) What produced the fall? A sliding, a faint, a trip, other? (<italic>iii</italic>) In which orientation did the fall happen? What part of the body received the impact?. The survey was conducted with 15 elderly people from the psycho-physic program of the Universidad de Antioquia (between July and August 2014, in Medell&#xED;n, Colombia), and 17 retirement homes (between October 2014 and January 2015, in Medell&#xED;n and Manizales, Colombia).</p>
+        <p>As a result of the survey, the independent elderly people fall more when walking, taking a shower, and walking up or down stairs; and fall less when trying to get up or sit down in a chair or a bed, or bending. On the other hand, elderly people living in retirement homes fall more when walking and when trying to get up from a chair or a bed and fall less when walking up or down stairs. The answers given by the participants were consistent with the results presented in [<xref ref-type="bibr" rid="B5-sensors-17-00198">5</xref>]. <xref ref-type="table" rid="sensors-17-00198-t001">Table 1</xref> shows the types of falls selected for this work. Falling when walking up or down stairs was identified as a common type of fall in the survey, but it was not included here because of the high risk of having an accident.</p>
+        <p>ADLs of <xref ref-type="table" rid="sensors-17-00198-t002">Table 2</xref> were selected based on: common activities, activities that are similar (in acceleration waveform) to falls, and activities with high acceleration that can generate false positives. All ADL and falls selected for this work were approved by a physician specialized in sports. The <xref ref-type="app" rid="app1-sensors-17-00198">Supplementary Materials</xref> contains videos of each type of fall and ADL performed by the participants, as an effort to solve another drawback in the literature: showing the exact conditions of the recordings [<xref ref-type="bibr" rid="B22-sensors-17-00198">22</xref>].</p>
+      </sec>
+      <sec sec-type="subjects" id="sec3dot2-sensors-17-00198">
+        <title>3.2. Participants</title>
+        <p>This database was generated with collaboration of 38 volunteers divided into two groups: elderly people and young adults. Elderly people group was formed by 15 participants (8 male and 7 female), and the young adults group was formed by 23 participants (11 male and 12 female). <xref ref-type="table" rid="sensors-17-00198-t003">Table 3</xref> shows age, weight, and height of each group. Individual information is available in the readme [<xref ref-type="bibr" rid="B22-sensors-17-00198">22</xref>]. The elderly people group is formed by retired employees of the Universidad de Antioquia and parents of current employees. They all were healthy and independent, and none of them presented gait problems.</p>
+        <p>Young adults performed ADLs and falls. Elderly people did not perform falls and activities D06, D13, D18, and D19 from <xref ref-type="table" rid="sensors-17-00198-t002">Table 2</xref> due to recommendations of the physician specialized in sports. Additionally, some elderly people did not perform some activities due to personal impairments (or medical recommendation). The participant of 60 years old identified by code SE06, who is an expert in Judo simulated both falls and ADLs.</p>
+        <p>All subjects gave their informed consent for inclusion before they participated in the study. The study was conducted in accordance with the Declaration of Helsinki, and the protocol was approved by the Bio-Ethics Committee of the Medicine Faculty, Universidad de Antioquia UDEA (Medell&#xED;n, Colombia). Additionally, all participants were evaluated by a physician specialized in sports.</p>
+      </sec>
+      <sec id="sec3dot3-sensors-17-00198">
+        <title>3.3. Experimental Set-Up</title>
+        <p>The dataset was recorded with a self-developed embedded device composed of a Kinets MKL25Z128VLK4 microcontroller (NPX, Austin, Texas, USA), an Analog Devices (Norwood, Massachusetts, USA) ADXL345 accelerometer (configured for <inline-formula>
+          <mml:math id="mm1" display="block">
+            <mml:semantics>
+              <mml:mrow>
+                <mml:mo>&#xB1;</mml:mo>
+                <mml:mn>16</mml:mn>
+              </mml:mrow>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> g, 13 bits of analog to digital converter &#x2013;ADC), a Freescale MMA8451Q accelerometer (<inline-formula>
+          <mml:math id="mm2" display="block">
+            <mml:semantics>
+              <mml:mrow>
+                <mml:mo>&#xB1;</mml:mo>
+                <mml:mn>8</mml:mn>
+              </mml:mrow>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> g, 14 bits of ADC), an ITG3200 gyroscope (<inline-formula>
+          <mml:math id="mm3" display="block">
+            <mml:semantics>
+              <mml:mrow>
+                <mml:mo>&#xB1;</mml:mo>
+                <mml:msup>
+                  <mml:mn>2000</mml:mn>
+                  <mml:mo>&#x2218;</mml:mo>
+                </mml:msup>
+              </mml:mrow>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>/s, 16 bits of ADC. Texas Instruments, Dallas, Texas, USA), an SD card for recording, and a 1000 mA/h generic battery. The device was fixed to the waist of the participants (<xref ref-type="fig" rid="sensors-17-00198-f001">Figure 1</xref>). This location provides high distinction among activities for a single accelerometer system [<xref ref-type="bibr" rid="B24-sensors-17-00198">24</xref>,<xref ref-type="bibr" rid="B25-sensors-17-00198">25</xref>].</p>
+        <p>Only acceleration data acquired with the ADXL345 sensor was used in this work, as it is energy efficient and provides the larger span. However, the data recorded with the other accelerometer and the gyroscope are also publicly available for further studies. The orientation of the sensor (see <xref ref-type="fig" rid="sensors-17-00198-f001">Figure 1</xref>) presents the positive <italic>z</italic>-axis in the forward direction, the positive <italic>y</italic>-axis in the gravity direction, and the positive <italic>x</italic>-axis pointing to the right side of the participant. All tests were performed with the original frequency sample of 200 Hz.</p>
+        <p>The classrooms and open spaces of a coliseum at the Universidad de Antioquia (Medell&#xED;n, Colombia) were used for recording the activities. In order to guarantee safety conditions, falls were simulated using safety landing mats. Activity D17 from <xref ref-type="table" rid="sensors-17-00198-t002">Table 2</xref> was recorded using the copilot chair of a Renault Logan car. The time required for recording all trials was approx. 1.5 h for each elderly person and 3.5 h for each young adult.</p>
+      </sec>
+      <sec id="sec3dot4-sensors-17-00198">
+        <title>3.4. Fall Detection Algorithms</title>
+        <p>Here, we test commonly known features as a way to provide a preliminary analysis with the proposed dataset. We follow the common pipeline to process the data: preprocessing, feature extraction, classification, and validation.</p>
+        <sec id="sec3dot4dot1-sensors-17-00198">
+          <title>3.4.1. Preprocessing Stage</title>
+          <p>Preprocessing is critical in the performance of the classification algorithms and their computational burden. In this work, we performed a comparison between using preprocessing or not in fall detection. The preprocessing stage consisted of a 4th order IIR Butterworth low-pass filter with cut-off frequency of 5 Hz. This filter was selected due to its simplicity, as it presented similar results than more elaborated IIR and FIR filters (including different cut-off frequencies) that we analyzed in preliminary tests.</p>
+        </sec>
+        <sec id="sec3dot4dot2-sensors-17-00198">
+          <title>3.4.2. Feature Extraction</title>
+          <p>The objective of this stage is to maximize the separation between ADL and falls. We tested several commonly used features listed in ([<xref ref-type="bibr" rid="B9-sensors-17-00198">9</xref>], Table 4 and [<xref ref-type="bibr" rid="B12-sensors-17-00198">12</xref>], Table 2) (original implementation details can be followed in the references therein). We separated the features in five groups: amplitude, orientation angle, statistical moments, critical phase time, and area under the curve. <xref ref-type="table" rid="sensors-17-00198-t004">Table 4</xref> includes those features that presented the best overall performance.</p>
+          <p>Here, one sample of acceleration in the three axis is defined as the vector <inline-formula>
+            <mml:math id="mm4" display="block">
+              <mml:semantics>
+                <mml:mrow>
+                  <mml:mover accent="true">
+                    <mml:mi>a</mml:mi>
+                    <mml:mo>&#x2192;</mml:mo>
+                  </mml:mover>
+                  <mml:mo>=</mml:mo>
+                  <mml:msup>
+                    <mml:mrow>
+                      <mml:mo>[</mml:mo>
+                      <mml:msub>
+                        <mml:mi>a</mml:mi>
+                        <mml:mi>x</mml:mi>
+                      </mml:msub>
+                      <mml:mo>,</mml:mo>
+                      <mml:msub>
+                        <mml:mi>a</mml:mi>
+                        <mml:mi>y</mml:mi>
+                      </mml:msub>
+                      <mml:mo>,</mml:mo>
+                      <mml:msub>
+                        <mml:mi>a</mml:mi>
+                        <mml:mi>z</mml:mi>
+                      </mml:msub>
+                      <mml:mo>]</mml:mo>
+                    </mml:mrow>
+                    <mml:mi>T</mml:mi>
+                  </mml:msup>
+                  <mml:mo>&#x2208;</mml:mo>
+                  <mml:msup>
+                    <mml:mi>&#x211C;</mml:mi>
+                    <mml:mn>3</mml:mn>
+                  </mml:msup>
+                </mml:mrow>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula>, the sliding window used for computing the dynamic features is denoted with <inline-formula>
+            <mml:math id="mm5" display="block">
+              <mml:semantics>
+                <mml:mrow>
+                  <mml:mover accent="true">
+                    <mml:mi>a</mml:mi>
+                    <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                  </mml:mover>
+                  <mml:mrow>
+                    <mml:mo>[</mml:mo>
+                    <mml:mi>k</mml:mi>
+                    <mml:mo>]</mml:mo>
+                  </mml:mrow>
+                  <mml:mo>=</mml:mo>
+                  <mml:msup>
+                    <mml:mrow>
+                      <mml:mo stretchy="false">[</mml:mo>
+                      <mml:msup>
+                        <mml:mover accent="true">
+                          <mml:mi>a</mml:mi>
+                          <mml:mo>&#x2192;</mml:mo>
+                        </mml:mover>
+                        <mml:mi>T</mml:mi>
+                      </mml:msup>
+                      <mml:mrow>
+                        <mml:mo>[</mml:mo>
+                        <mml:mi>k</mml:mi>
+                        <mml:mo>&#x2212;</mml:mo>
+                        <mml:msub>
+                          <mml:mi>N</mml:mi>
+                          <mml:mi>v</mml:mi>
+                        </mml:msub>
+                        <mml:mo>+</mml:mo>
+                        <mml:mn>1</mml:mn>
+                        <mml:mo>]</mml:mo>
+                      </mml:mrow>
+                      <mml:mo>,</mml:mo>
+                      <mml:mo>&#x22EF;</mml:mo>
+                      <mml:mo>,</mml:mo>
+                      <mml:msup>
+                        <mml:mover accent="true">
+                          <mml:mi>a</mml:mi>
+                          <mml:mo>&#x2192;</mml:mo>
+                        </mml:mover>
+                        <mml:mi>T</mml:mi>
+                      </mml:msup>
+                      <mml:mrow>
+                        <mml:mo>[</mml:mo>
+                        <mml:mi>k</mml:mi>
+                        <mml:mo>]</mml:mo>
+                      </mml:mrow>
+                      <mml:mo stretchy="false">]</mml:mo>
+                    </mml:mrow>
+                    <mml:mi>T</mml:mi>
+                  </mml:msup>
+                  <mml:mo>&#x2208;</mml:mo>
+                  <mml:msup>
+                    <mml:mi>&#x211C;</mml:mi>
+                    <mml:mrow>
+                      <mml:msub>
+                        <mml:mi>N</mml:mi>
+                        <mml:mi>v</mml:mi>
+                      </mml:msub>
+                      <mml:mo>&#xD7;</mml:mo>
+                      <mml:mn>3</mml:mn>
+                    </mml:mrow>
+                  </mml:msup>
+                </mml:mrow>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula>, at time sample <italic>k</italic>, where <inline-formula>
+            <mml:math id="mm6" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>N</mml:mi>
+                  <mml:mi>v</mml:mi>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> is the number of samples in the selected window. The standard deviation operator is defined as <inline-formula>
+            <mml:math id="mm7" display="block">
+              <mml:semantics>
+                <mml:mrow>
+                  <mml:mi>&#x3C3;</mml:mi>
+                  <mml:mo>(</mml:mo>
+                  <mml:mo>&#xB7;</mml:mo>
+                  <mml:mo>)</mml:mo>
+                </mml:mrow>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula>, and RMS refers to the Root Mean Square value. The integrals were computed with the trapezoid method, with limits <inline-formula>
+            <mml:math id="mm8" display="block">
+              <mml:semantics>
+                <mml:mrow>
+                  <mml:mi>k</mml:mi>
+                  <mml:mo>&#x2212;</mml:mo>
+                  <mml:msub>
+                    <mml:mi>N</mml:mi>
+                    <mml:mi>v</mml:mi>
+                  </mml:msub>
+                  <mml:mo>+</mml:mo>
+                  <mml:mn>1</mml:mn>
+                </mml:mrow>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> to <italic>k</italic>.</p>
+        </sec>
+        <sec id="sec3dot4dot3-sensors-17-00198">
+          <title>3.4.3. Classification</title>
+          <p>A simple to implement threshold-based classifier was selected for this work. Threshold-based classification is still the most widely used strategy for fall detection, as it is less computationally intensive than support vector machines and similar classification algorithms [<xref ref-type="bibr" rid="B11-sensors-17-00198">11</xref>]. We analyzed two widely used alternatives: Threshold 1 (<inline-formula>
+            <mml:math id="mm38" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>T</mml:mi>
+                  <mml:mn>1</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula>) which follows maximum accuracy, and Threshold 2 (<inline-formula>
+            <mml:math id="mm39" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>T</mml:mi>
+                  <mml:mn>2</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula>) which maximizes the sensitivity (fall detection capability). The sensitivity (SE), specificity (SP) and accuracy (AC) were computed as follows [<xref ref-type="bibr" rid="B26-sensors-17-00198">26</xref>]:<disp-formula id="FD1-sensors-17-00198">
+            <label>(1)</label>
+            <mml:math id="mm40" display="block">
+              <mml:semantics>
+                <mml:mrow>
+                  <mml:mi>SE</mml:mi>
+                  <mml:mo>=</mml:mo>
+                  <mml:mfrac>
+                    <mml:mrow>
+                      <mml:mi>T</mml:mi>
+                      <mml:mi>P</mml:mi>
+                    </mml:mrow>
+                    <mml:mrow>
+                      <mml:mi>T</mml:mi>
+                      <mml:mi>P</mml:mi>
+                      <mml:mo>+</mml:mo>
+                      <mml:mi>F</mml:mi>
+                      <mml:mi>N</mml:mi>
+                    </mml:mrow>
+                  </mml:mfrac>
+                  <mml:mspace width="1.em"/>
+                  <mml:mi>SP</mml:mi>
+                  <mml:mo>=</mml:mo>
+                  <mml:mfrac>
+                    <mml:mrow>
+                      <mml:mi>T</mml:mi>
+                      <mml:mi>N</mml:mi>
+                    </mml:mrow>
+                    <mml:mrow>
+                      <mml:mi>T</mml:mi>
+                      <mml:mi>N</mml:mi>
+                      <mml:mo>+</mml:mo>
+                      <mml:mi>F</mml:mi>
+                      <mml:mi>P</mml:mi>
+                    </mml:mrow>
+                  </mml:mfrac>
+                  <mml:mspace width="1.em"/>
+                  <mml:mi>AC</mml:mi>
+                  <mml:mo>=</mml:mo>
+                  <mml:mfrac>
+                    <mml:mrow>
+                      <mml:mi>SE</mml:mi>
+                      <mml:mo>+</mml:mo>
+                      <mml:mi>SP</mml:mi>
+                    </mml:mrow>
+                    <mml:mn>2</mml:mn>
+                  </mml:mfrac>
+                  <mml:mo>,</mml:mo>
+                </mml:mrow>
+              </mml:semantics>
+            </mml:math>
+          </disp-formula>
+         where <inline-formula>
+            <mml:math id="mm41" display="block">
+              <mml:semantics>
+                <mml:mrow>
+                  <mml:mi>T</mml:mi>
+                  <mml:mi>P</mml:mi>
+                </mml:mrow>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> and <inline-formula>
+            <mml:math id="mm42" display="block">
+              <mml:semantics>
+                <mml:mrow>
+                  <mml:mi>T</mml:mi>
+                  <mml:mi>N</mml:mi>
+                </mml:mrow>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> are the true positives and negatives; <inline-formula>
+            <mml:math id="mm43" display="block">
+              <mml:semantics>
+                <mml:mrow>
+                  <mml:mi>F</mml:mi>
+                  <mml:mi>P</mml:mi>
+                </mml:mrow>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> and <inline-formula>
+            <mml:math id="mm44" display="block">
+              <mml:semantics>
+                <mml:mrow>
+                  <mml:mi>F</mml:mi>
+                  <mml:mi>N</mml:mi>
+                </mml:mrow>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> the false positives and negatives, respectively. The way we computed the accuracy allows using an unbalanced number of ADLs and fall trials in a single test. Validation data was tested with the chosen thresholds following a 10-fold cross-validation.</p>
+          <p><xref ref-type="fig" rid="sensors-17-00198-f002">Figure 2</xref> shows an example of the preprocessing stage and the computation of feature <inline-formula>
+            <mml:math id="mm45" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>C</mml:mi>
+                  <mml:mn>8</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> for ADL D11 (trying to get-up from a chair and fail&#x2014;<xref ref-type="fig" rid="sensors-17-00198-f002">Figure 2</xref>a) and fall F05 (trip and fall while jogging&#x2014;<xref ref-type="fig" rid="sensors-17-00198-f002">Figure 2</xref>b), with threshold <inline-formula>
+            <mml:math id="mm46" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>T</mml:mi>
+                  <mml:mn>1</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula>. This ADL was selected because of its high peak acceleration. Despite this, <inline-formula>
+            <mml:math id="mm47" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>C</mml:mi>
+                  <mml:mn>8</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> peak was around 40% below the threshold value (<xref ref-type="fig" rid="sensors-17-00198-f002">Figure 2</xref>a&#x2014;bottom). On the other hand, feature <inline-formula>
+            <mml:math id="mm48" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>C</mml:mi>
+                  <mml:mn>8</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> far crossed the threshold during fall F05 (<xref ref-type="fig" rid="sensors-17-00198-f002">Figure 2</xref>b&#x2014;bottom). Note that while jogging before the fall, which is a high acceleration activity, feature <inline-formula>
+            <mml:math id="mm49" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>C</mml:mi>
+                  <mml:mn>8</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> was always below the threshold.</p>
+        </sec>
+        <sec id="sec3dot4dot4-sensors-17-00198">
+          <title>3.4.4. Cross-Validation</title>
+          <p>The robustness of the classification stage was analyzed with a 10-fold cross-validation set-up. All analysis were performed guaranteeing the same proportion of falls and ADLs in the groups. Each group was used in one fold as validation data.</p>
+          <p>In the following section, we analyze three commonly discussed issues: the effect of preprocessing, the importance of including elderly people in the training stage, and the way the threshold is selected. We finish this study with a novel activity-by-activity analysis that demonstrates how most errors occur in specific activities.</p>
+        </sec>
+      </sec>
+    </sec>
+    <sec sec-type="results" id="sec4-sensors-17-00198">
+      <title>4. Results</title>
+      <sec id="sec4dot1-sensors-17-00198">
+        <title>4.1. Effect of Filtering as the Preprocessing Stage</title>
+        <p>We initially tested the effect of filtering before applying the features of <xref ref-type="table" rid="sensors-17-00198-t004">Table 4</xref>. We used data from all 38 subjects for this analysis (4510 trials). <xref ref-type="fig" rid="sensors-17-00198-f003">Figure 3</xref> shows the mean accuracy obtained in validation with each feature after a 10-fold cross-validation for both raw and filtered data. Dynamic features were computed within sliding-horizon windows with full overlap. The window size (<inline-formula>
+          <mml:math id="mm53" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>N</mml:mi>
+                <mml:mi>v</mml:mi>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>) for each feature was selected based on a heuristic analysis with windows between 200 ms and 2 s. Most dynamic features are commonly associated with the prior to the fall phase, or with the critical phase of the fall, which are estimated between 300&#x2013;500 ms [<xref ref-type="bibr" rid="B27-sensors-17-00198">27</xref>]. However, in this work, only <inline-formula>
+          <mml:math id="mm54" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>10</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>, <inline-formula>
+          <mml:math id="mm55" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>11</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>, and <inline-formula>
+          <mml:math id="mm56" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>14</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> performed better with a window of <inline-formula>
+          <mml:math id="mm57" display="block">
+            <mml:semantics>
+              <mml:mrow>
+                <mml:msub>
+                  <mml:mi>N</mml:mi>
+                  <mml:mi>v</mml:mi>
+                </mml:msub>
+                <mml:mo>=</mml:mo>
+                <mml:mn>500</mml:mn>
+              </mml:mrow>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> ms. The other dynamic features improved with <inline-formula>
+          <mml:math id="mm58" display="block">
+            <mml:semantics>
+              <mml:mrow>
+                <mml:msub>
+                  <mml:mi>N</mml:mi>
+                  <mml:mi>v</mml:mi>
+                </mml:msub>
+                <mml:mo>=</mml:mo>
+                <mml:mn>1</mml:mn>
+              </mml:mrow>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> s (200 samples).</p>
+        <p>From <xref ref-type="fig" rid="sensors-17-00198-f003">Figure 3</xref>, features <inline-formula>
+          <mml:math id="mm61" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>2</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> and <inline-formula>
+          <mml:math id="mm62" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>8</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> obtained the higher accuracy once the filter was applied (<inline-formula>
+          <mml:math id="mm63" display="block">
+            <mml:semantics>
+              <mml:mrow>
+                <mml:mn>95</mml:mn>
+                <mml:mo>.</mml:mo>
+                <mml:mn>0</mml:mn>
+                <mml:mo>%</mml:mo>
+                <mml:mo>&#xB1;</mml:mo>
+                <mml:mn>1</mml:mn>
+                <mml:mo>.</mml:mo>
+                <mml:mn>2</mml:mn>
+              </mml:mrow>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>% and <inline-formula>
+          <mml:math id="mm64" display="block">
+            <mml:semantics>
+              <mml:mrow>
+                <mml:mn>96</mml:mn>
+                <mml:mo>.</mml:mo>
+                <mml:mn>1</mml:mn>
+                <mml:mo>%</mml:mo>
+                <mml:mo>&#xB1;</mml:mo>
+                <mml:mn>0</mml:mn>
+                <mml:mo>.</mml:mo>
+                <mml:mn>75</mml:mn>
+              </mml:mrow>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>%, respectively). This result is consistent with the literature ([<xref ref-type="bibr" rid="B9-sensors-17-00198">9</xref>], Table 1). In this case, <inline-formula>
+          <mml:math id="mm65" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>2</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> would be preferred as it is static, i.e., it requires less memory and computational effort to be computed. The main difference between <inline-formula>
+          <mml:math id="mm66" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>2</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> and the well known sum vector magnitude (<inline-formula>
+          <mml:math id="mm67" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>1</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>) is that it only includes the horizontal plane (<italic>x</italic>-axis and <italic>z</italic>-axis in our device). The position of the sensor in the center of mass of the body allows neglecting the vertical axis from the computation. With this, we reduce the number of false positives caused by the high accelerations achieved in the <italic>y</italic>-axis with many ADLs (walk, run, jump, etc.).</p>
+        <p>Regarding the other features, it is evident that not all of them improved their performance after filtering. Specifically, those based on integration behaved better without preprocessing, which is expected as they may reduce high frequency noise as a low-pass filter. Feature <inline-formula>
+          <mml:math id="mm68" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>13</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>, for example, achieved similar accuracy to <inline-formula>
+          <mml:math id="mm69" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>2</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> without the need of implementing a digital filter. Selecting the best fitted feature would depend on the embedded device used and the way they are implemented. Finally, orientation and time based features presented an overall poor performance (comparable to the sum vector magnitude).</p>
+        <p>The inclusion of the filtering stage also defines the minimum allowed frequency sample. A preliminary analysis indicated that more elaborated filters or higher cut frequency values did not improve the accuracy. This result is meaningful as it suggests that a frequency sample of up to 11 Hz could be enough for fall detection (lower than any work in the literature), with its respective burden reduction. This gives an advantage to those features that performed better with the filter, given that the frequency sample is critical in wearable devices. This is because (<italic>i</italic>) the system remains more time in idle state; and (<italic>ii</italic>) more separation among samples allows more computations of the classifier. SisFall dataset was released with its original 200 Hz frequency sample, as a way to encourage other authors to obtain their own conclusions.</p>
+        <p>For illustrative purposes, in the remainder of this paper, we only show results of the five features that best performed: <inline-formula>
+          <mml:math id="mm70" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>2</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>, <inline-formula>
+          <mml:math id="mm71" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>3</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>, <inline-formula>
+          <mml:math id="mm72" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>8</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>, <inline-formula>
+          <mml:math id="mm73" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>9</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>, and <inline-formula>
+          <mml:math id="mm74" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>13</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>.</p>
+      </sec>
+      <sec id="sec4dot2-sensors-17-00198">
+        <title>4.2. Training with Young vs. Elderly People</title>
+        <p>Our second proof-of-principle experiment accounted if training fall detection algorithms with young adults is adequate to use with elderly people. <xref ref-type="table" rid="sensors-17-00198-t005">Table 5</xref> shows sensitivity (SE), specificity (SP) and accuracy (AC) results after a 10-fold cross-validation performed only with data from young adults, and the results of using the obtained <inline-formula>
+          <mml:math id="mm75" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>T</mml:mi>
+                <mml:mn>1</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> thresholds (included in <xref ref-type="table" rid="sensors-17-00198-t006">Table 6</xref>) to test with data from elderly people.</p>
+        <p>The analysis presented mixed results. <inline-formula>
+          <mml:math id="mm81" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>2</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>, <inline-formula>
+          <mml:math id="mm82" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>8</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> and <inline-formula>
+          <mml:math id="mm83" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>13</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> lost performance while <inline-formula>
+          <mml:math id="mm84" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>3</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> and <inline-formula>
+          <mml:math id="mm85" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>9</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> even improved their accuracy (AC) when validated with elderly people. However, all features significantly reduced their sensitivity (SE, true positive rate). These results coincide with those presented in [<xref ref-type="bibr" rid="B8-sensors-17-00198">8</xref>]. It is noteworthy, as there are clear differences among the participants of both studies. The SisFall dataset we release in this work is intended to help develop fall detection algorithms for healthy independent elderly people, while authors in [<xref ref-type="bibr" rid="B8-sensors-17-00198">8</xref>] obtained their dataset with highly impaired institutionalized Parkinson&#x2019;s patients.</p>
+        <p>The generalized variation in sensitivity and specificity (which increased in validation with elderly people) suggests a shift in all activities with respect to the threshold. We performed a second comparative analysis to determine if the threshold is better adjusted when the algorithms are trained exclusively with elderly people. <xref ref-type="table" rid="sensors-17-00198-t006">Table 6</xref> shows the validation accuracy of elderly people and threshold <inline-formula>
+          <mml:math id="mm86" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>T</mml:mi>
+                <mml:mn>1</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> values from the previous analysis (test 1), and a new analysis training the algorithms only with elderly people (test 2). As a result, all features improved their performance with the new training (first two columns). Additionally, all features diminished their <inline-formula>
+          <mml:math id="mm87" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>T</mml:mi>
+                <mml:mn>1</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> values, which confirms the shift between young and elderly people. This result makes evident the need of including data from elderly people in the training stage, especially because after training with elderly people, the accuracy was still below the one obtained with young people.</p>
+        <p>A close review of individual activities of SisFall provided the following findings: (<italic>i</italic>) ADLs and falls simulated by elderly people were smaller in amplitude than those simulated by young people. Then, algorithms trained with data from young people tended to bias the thresholds upwards in amplitude; (<italic>ii</italic>) most features tended to fail in the same activities. <xref ref-type="fig" rid="sensors-17-00198-f004">Figure 4</xref> shows box-plots of the maximum value obtained per activity with <inline-formula>
+          <mml:math id="mm96" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>8</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> feature (with young adults group exclusively). Note that only few activities severely crossed the threshold (horizontal red line): jogging quickly (D04), jump (D18), and falling backward when trying to sit (F11).</p>
+        <p>During this study, we observed differences in the way young adults behaved and fell with respect to elderly people. As previously stated by [<xref ref-type="bibr" rid="B28-sensors-17-00198">28</xref>], the dynamics of simulated (mimicked) and real-world falls can be different. They found that young people simulating falls tend to do it faster without trying to avoid the impact. This behavior can be observed in the videos released as <xref ref-type="app" rid="app1-sensors-17-00198">Supplementary Materials</xref> of this paper [<xref ref-type="bibr" rid="B22-sensors-17-00198">22</xref>]. On the other hand, because of his age and experience in Judo, the elderly person that performed falls always tried to cushion the hits, which is what we expect from someone having an undesired fall.</p>
+        <p>We acknowledge that our dataset only includes simulated falls of one elderly person (subject SE06), who also is a Judo expert (not representative of the population). However, it allowed us to obtain five controlled repetitions of 15 different types of falls (for a total of 75 falls). Authors in [<xref ref-type="bibr" rid="B8-sensors-17-00198">8</xref>] obtained 29 real falls, but they did not release them and their population was also distant from independent elderly people. Additionally, they did not provide detailed information about each fall condition. SisFall is the first public dataset that includes ADLs from elderly people and falls from an elderly person.</p>
+      </sec>
+      <sec id="sec4dot3-sensors-17-00198">
+        <title>4.3. Zero False Negatives</title>
+        <p>One way to increase the effectiveness of the fall detection algorithms consists of including a false alarm button, which allows the user to cancel ADL detected as falls (false positives) [<xref ref-type="bibr" rid="B29-sensors-17-00198">29</xref>]. This method allows moving the threshold just below the minimum fall values (as <inline-formula>
+          <mml:math id="mm99" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>T</mml:mi>
+                <mml:mn>2</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> does) [<xref ref-type="bibr" rid="B12-sensors-17-00198">12</xref>]. <xref ref-type="table" rid="sensors-17-00198-t007">Table 7</xref> shows the specificity and accuracy obtained after a 10-fold cross-validation with all 38 subjects (sensitivity achieved approx. 99.99% &#xB1; 0.2% in all features). The loss of performance in all features is evident, failing in up to seven of every 10 ADL, and achieving only 84% of accuracy with <inline-formula>
+          <mml:math id="mm100" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>C</mml:mi>
+                <mml:mn>9</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> (the best feature).</p>
+        <p>A fall detection system should not miss a single fall due to the medical implications every fall may carry on. Based on this statement, results with threshold <inline-formula>
+          <mml:math id="mm107" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>T</mml:mi>
+                <mml:mn>2</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula> may be more meaningful than with <inline-formula>
+          <mml:math id="mm108" display="block">
+            <mml:semantics>
+              <mml:msub>
+                <mml:mi>T</mml:mi>
+                <mml:mn>1</mml:mn>
+              </mml:msub>
+            </mml:semantics>
+          </mml:math>
+        </inline-formula>. However, a failure rate of nearly 50/50 in ADL is prohibitive in real-life applications (the subject would be regularly pressing the false alarm button). The need of improving fall detection features stands, as a poor feature extraction requires more computationally intensive classifiers with the consequent battery life reduction [<xref ref-type="bibr" rid="B11-sensors-17-00198">11</xref>].</p>
+      </sec>
+    </sec>
+    <sec sec-type="discussion" id="sec5-sensors-17-00198">
+      <title>5. Discussion</title>
+      <p>Research on elderly fall detection lacks public datasets with activities and falls simulated by elderly people. Available datasets have few activities and none include falls from the objective population. In this paper, we presented and made publicly available the SisFall dataset. It consisted of up to 34 activities (falls and ADLs) that were performed by 38 participants with a wearable device fixed to their waist. One of the participants was an elderly person that simulated both ADL and falls. Together with the dataset, we included videos of all simulated activities as an effort to help other researchers to replicate this work.</p>
+      <p>The SisFall dataset contains more participants, types of activities and recordings than any other publicly available dataset. It consists of 2706 ADL and 1798 falls, including data from 15 healthy independent elderly persons. To our knowledge, no public dataset contains data from elderly people, and their number of recordings is smaller (Mobifall: 342 ADLs and 288 falls; TFall: continuous ADLs and 240 falls; DLR: 961 ADLs and 56 falls; and Project Gravity: 138 ADLs and 72 falls).</p>
+      <p>We developed and released this dataset as a benchmark for other authors in the field. In that sense, we tested it with some of the most widely used features to detect falls, with three proof-of-principle experiments: the effect of the preprocessing stage, the importance of including data from elderly people, and how a threshold focused on maximum sensitivity severely reduces the specificity. Explanations about preprocessing are commonly simplified in most approaches available in the literature. Here, with a simple 4th order Butterworth filter, we increased the accuracy of several features. However, not all features improved their performance, which is expected as they share an integral-based nature; but it is a fact not previously discussed in the literature. Nevertheless, preprocessing is crucial in fall detection as it defines the minimum acquisition frequency, which, in this work, we found to be at 11 Hz for those features that indeed improved with the filtering stage.</p>
+      <p>In the second test, we analyzed the effect of training with young adults on a system developed to work with elderly people, which is usual in the field despite preliminary evidence that the results are biased [<xref ref-type="bibr" rid="B8-sensors-17-00198">8</xref>]. Similar to this previous work, we found that the sensitivity is highly affected in all features once they are validated with the objective population. Note that Bagal&#xE0; et al. [<xref ref-type="bibr" rid="B8-sensors-17-00198">8</xref>] used 29 real falls of highly impaired Parkinson&#x2019;s patients. In our case, we used 75 falls under controlled conditions from a single independent elderly person, which is also a martial arts expert. It is noteworthy that, despite the large difference among validation sets, our results presented the same trend of [<xref ref-type="bibr" rid="B8-sensors-17-00198">8</xref>]. Moreover, when the classifiers were trained with elderly people, the accuracy was still lower than with young people. These findings suggest that, due to the overall higher acceleration that young people show in all activities, including ADLs, and falls from elderly people, it is crucial to obtain proper results. Additionally, the lower accuracy obtained when training with elderly people suggests that there is a need of a better feature extraction.</p>
+      <p>Developing a better feature extraction should be focused on specific activities. There are not many works focused on the types of falls elderly people suffer (most authors were limited to perform the same activities of previous works). However, the answers of our survey, previous works [<xref ref-type="bibr" rid="B5-sensors-17-00198">5</xref>] and our findings suggest that if properly selected, authors could use a small sample of activities for their own tests. Performing an individual activity analysis (as presented in <xref ref-type="fig" rid="sensors-17-00198-f004">Figure 4</xref>) should help with the design of new features.</p>
+      <p>Our final test consisted of placing the threshold (<inline-formula>
+        <mml:math id="mm109" display="block">
+          <mml:semantics>
+            <mml:msub>
+              <mml:mi>T</mml:mi>
+              <mml:mn>2</mml:mn>
+            </mml:msub>
+          </mml:semantics>
+        </mml:math>
+      </inline-formula>) below the fall value with minimum amplitude. In practice, fall detection systems are expected to detect all falls, while keeping the false positive rate as low as possible. Results of <xref ref-type="table" rid="sensors-17-00198-t007">Table 7</xref> presented poor results in all features. Note how a not too large increment in sensitivity caused significant reductions in specificity. This fact is noteworthy, as most works focus on maximizing accuracy instead of favoring fall detection. Authors that addressed this issue usually included a false-alarm button as part of their methodology [<xref ref-type="bibr" rid="B29-sensors-17-00198">29</xref>].</p>
+      <p>Our dataset may be biased by two facts: (<italic>i</italic>) all of our falls were simulated (mimicked). Klenk et al. [<xref ref-type="bibr" rid="B28-sensors-17-00198">28</xref>] stated that young people tend to fall faster than in real-life conditions; (<italic>ii</italic>) we only included falls from one independent elderly person; and, as a martial arts expert, this subject is not representative of the population. With respect to the first fact, the results of <xref ref-type="sec" rid="sec4dot2-sensors-17-00198">Section 4.2</xref> show that training with young people effectively shows higher accelerations. However, this difference can be quantified and corrected by comparing their mean acceleration per activity versus the elderly subjects on the same dataset. About the second fact, our falls from an elderly person (<xref ref-type="sec" rid="sec4dot2-sensors-17-00198">Section 4.2</xref>) presented the same trend of a previous work that included real falls of impaired elderly people [<xref ref-type="bibr" rid="B8-sensors-17-00198">8</xref>]. However, the crucial point here are the problems with obtaining real falls from healthy independent elderly people. In our case, we only had permission from the Ethics committee for simulating falls with one participant (SE06). Indeed, this participant always tried to soften the fall (as any person trying to avoid a fall would do). We consider that going farther with a wider and more realistic elderly fall dataset would be extremely challenging. Independent elderly people (the target of this work) fall on average once per year, i.e., to acquire a single fall would require a full year of continuous recording. Moreover, in this way, the actual conditions of the fall (activity, side of falling, etc.) may never be known. Despite these possible biases, we expect that this dataset will be a useful benchmark for other authors to test their own approaches and to solve the open issues presented in this work.</p>
+    </sec>
+    <sec sec-type="conclusions" id="sec6-sensors-17-00198">
+      <title>6. Conclusions</title>
+      <p>In this paper we presented and released SisFall, a fall and movement dataset acquired with 38 participants (15 of them elderly people). The data were acquired with an accelerometer fixed to their body. Along with this dataset we demonstrated that a 5 Hz fourth order filter keeps enough information for detecting falls on independent elderly people. Additionally, we showed that (as Bagal&#xE1; et al. stated for institutionalized impaired elderly people) training fall detection algorithms with young people is not adequate for detecting falls on independent elderly people. The main problem found is that young people simulate falls and ADL with more acceleration than the expected with elderly people. Finally, we showed why finding maximum accuracy in fall detection algorithms is not a good measure for real-life applications, where the sensibility of the system must be fitted to detect falls, while reducing the false positive rate as possible. However, all tested features presented poor results with this requisite.</p>
+    </sec>
+  </body>
+  <back>
+    <app-group>
+      <app id="app1-sensors-17-00198">
+        <title>Supplementary Materials</title>
+        <p>The following files are available online [<xref ref-type="bibr" rid="B22-sensors-17-00198">22</xref>]:
+		<list list-type="bullet">
+        <list-item>
+        <p><bold>SisFall movement and fall dataset.</bold> Text files with all recorded activities and a Readme with particular information of all subjects and recordings.</p>
+		</list-item>
+		<list-item>
+        <p><bold>Video recordings of all activities.</bold> Each activity included in the SisFall dataset was video recorded and included in this material.</p>
+		</list-item>
+		<list-item>
+        <p><bold>Tables and figures with results of all features.</bold> The same experiments shown along the paper with only five features were performed with the 14 selected for this work.</p>
+		</list-item></list></p>
+      </app>
+    </app-group>
+    <ack>
+      <title>Acknowledgments</title>
+      <p>We would like to thank Monica Rodriguez, Camilo Ocampo and Felipe Toro for their collaboration; and to all those anonymous participants, PROSA UDEA, and the Judo and Aikido martial arts groups at the UDEA for their insightful contribution in the generation of the SisFall dataset. We also want to acknowledge the dedication of the reviewers that evaluated this work. This work was supported by the project &#x201C;Plataforma tecnol&#xF3;gica para los servicios de teleasistencia, emergencias m&#xE9;dicas, seguimiento y monitoreo permanente a los pacientes y apoyo a los programas de promoci&#xF3;n y prevenci&#xF3;n&#x201D;, code &#x201C;Ruta-N: FP44842-512C-2013&#x201D;.</p>
+    </ack>
+    <notes>
+      <title>Author Contributions</title>
+      <p>All authors conceived and designed the experiments; A.S. performed the experiments; A.S. and J.D.L. analyzed the data; and all authors read and approved the final manuscript.</p>
+    </notes>
+	 <notes notes-type="COI-statement">
+      <title>Conflicts of Interest</title>
+      <p>The authors declare no conflict of interest. The founding sponsors had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript, and in the decision to publish the results.</p>
+    </notes>
+    <ref-list>
+      <title>References</title>
+      <ref id="B1-sensors-17-00198">
+        <label>1.</label>
+        <citation citation-type="book">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Masdeu</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Sudarsky</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Wolfson</surname>
+              <given-names>L.</given-names>
+            </name>
+          </person-group>
+          <source>Gait Disorders of Aging. Falls and Therapeutic Strategies</source>
+          <publisher-name>Lippincot-Raven</publisher-name>
+          <publisher-loc>Philadelphia, PA, USA</publisher-loc>
+          <year>1997</year>
+        </citation>
+      </ref>
+      <ref id="B2-sensors-17-00198">
+        <label>2.</label>
+        <citation citation-type="book">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Lord</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Sherrington</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Menz</surname>
+              <given-names>H.</given-names>
+            </name>
+          </person-group>
+          <source>Falls in Older People: Risk Factors and Strategies for Prevention</source>
+          <edition>1st ed.</edition>
+          <publisher-name>Cambridge University Press</publisher-name>
+          <publisher-loc>Cambridge, UK</publisher-loc>
+          <year>2001</year>
+        </citation>
+      </ref>
+      <ref id="B3-sensors-17-00198">
+        <label>3.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Vellas</surname>
+              <given-names>B.</given-names>
+            </name>
+            <name>
+              <surname>Wayne</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Romero</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Baumgartner</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Garry</surname>
+              <given-names>P.</given-names>
+            </name>
+          </person-group>
+          <article-title>Fear of falling and restriction of mobility in elderly fallers</article-title>
+          <source>Age Ageing</source>
+          <year>1997</year>
+          <volume>26</volume>
+          <fpage>189</fpage>
+          <lpage>193</lpage>
+          <pub-id pub-id-type="doi">10.1093/ageing/26.3.189</pub-id>
+          <pub-id pub-id-type="pmid">9223714</pub-id>
+        </citation>
+      </ref>
+      <ref id="B4-sensors-17-00198">
+        <label>4.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Delbaere</surname>
+              <given-names>K.</given-names>
+            </name>
+            <name>
+              <surname>Crombez</surname>
+              <given-names>G.</given-names>
+            </name>
+            <name>
+              <surname>Vanderstraeten</surname>
+              <given-names>G.</given-names>
+            </name>
+            <name>
+              <surname>Willems</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Cambier</surname>
+              <given-names>D.</given-names>
+            </name>
+          </person-group>
+          <article-title>Fear-related avoidance of activities, falls and physical frailty. A prospective community-based cohort study</article-title>
+          <source>Age Ageing</source>
+          <year>2004</year>
+          <volume>33</volume>
+          <fpage>368</fpage>
+          <lpage>373</lpage>
+          <pub-id pub-id-type="doi">10.1093/ageing/afh106</pub-id>
+          <pub-id pub-id-type="pmid">15047574</pub-id>
+        </citation>
+      </ref>
+      <ref id="B5-sensors-17-00198">
+        <label>5.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Lord</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Ward</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Williams</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Anstey</surname>
+              <given-names>K.</given-names>
+            </name>
+          </person-group>
+          <article-title>An epidemiological study of falls in older community-dwelling women: The Randwick falls and fractures study</article-title>
+          <source>Aust. J. Public Health</source>
+          <year>1993</year>
+          <volume>17</volume>
+          <fpage>240</fpage>
+          <lpage>245</lpage>
+          <pub-id pub-id-type="doi">10.1111/j.1753-6405.1993.tb00143.x</pub-id>
+          <pub-id pub-id-type="pmid">8286498</pub-id>
+        </citation>
+      </ref>
+      <ref id="B6-sensors-17-00198">
+        <label>6.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Igual</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Medrano</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Plaza</surname>
+              <given-names>I.</given-names>
+            </name>
+          </person-group>
+          <article-title>Challenges, issues and trends in fall detection systems</article-title>
+          <source>BioMed. Eng. OnLine</source>
+          <year>2013</year>
+          <volume>12</volume>
+          <fpage>1</fpage>
+          <lpage>24</lpage>
+          <pub-id pub-id-type="doi">10.1186/1475-925X-12-66</pub-id>
+          <pub-id pub-id-type="pmid">23829390</pub-id>
+        </citation>
+      </ref>
+      <ref id="B7-sensors-17-00198">
+        <label>7.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Brownsell</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Bradley</surname>
+              <given-names>D.</given-names>
+            </name>
+            <name>
+              <surname>Bragg</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Catlin</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Carlier</surname>
+              <given-names>J.</given-names>
+            </name>
+          </person-group>
+          <article-title>Do community alarm users want telecare?</article-title>
+          <source>J. Telemed. Telecare</source>
+          <year>2000</year>
+          <volume>6</volume>
+          <fpage>199</fpage>
+          <lpage>204</lpage>
+          <pub-id pub-id-type="doi">10.1258/1357633001935356</pub-id>
+          <pub-id pub-id-type="pmid">11027119</pub-id>
+        </citation>
+      </ref>
+      <ref id="B8-sensors-17-00198">
+        <label>8.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Bagala</surname>
+              <given-names>F.</given-names>
+            </name>
+            <name>
+              <surname>Becker</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Cappello</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Chiari</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Aminian</surname>
+              <given-names>K.</given-names>
+            </name>
+            <name>
+              <surname>Hausdorff</surname>
+              <given-names>J.M.</given-names>
+            </name>
+            <name>
+              <surname>Zijlstra</surname>
+              <given-names>W.</given-names>
+            </name>
+            <name>
+              <surname>Klenk</surname>
+              <given-names>J.</given-names>
+            </name>
+          </person-group>
+          <article-title>Evaluation of Accelerometer-Based Fall Detection Algorithms on Real-World Falls</article-title>
+          <source>PLoS ONE</source>
+          <year>2012</year>
+          <volume>7</volume>
+          <elocation-id>e37062</elocation-id>
+          <pub-id pub-id-type="doi">10.1371/journal.pone.0037062</pub-id>
+          <pub-id pub-id-type="pmid">22615890</pub-id>
+        </citation>
+      </ref>
+      <ref id="B9-sensors-17-00198">
+        <label>9.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Pannurat</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Thiemjarus</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Nantajeewarawat</surname>
+              <given-names>E.</given-names>
+            </name>
+          </person-group>
+          <article-title>Automatic fall monitoring: A review</article-title>
+          <source>Sensors</source>
+          <year>2014</year>
+          <volume>14</volume>
+          <fpage>12900</fpage>
+          <lpage>12936</lpage>
+          <pub-id pub-id-type="doi">10.3390/s140712900</pub-id>
+          <pub-id pub-id-type="pmid">25046016</pub-id>
+        </citation>
+      </ref>
+      <ref id="B10-sensors-17-00198">
+        <label>10.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Shany</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Redmond</surname>
+              <given-names>S.J.</given-names>
+            </name>
+            <name>
+              <surname>Narayanan</surname>
+              <given-names>M.R.</given-names>
+            </name>
+            <name>
+              <surname>Lovell</surname>
+              <given-names>N.H.</given-names>
+            </name>
+          </person-group>
+          <article-title>Sensors-Based Wearable Systems for Monitoring of Human Movement and Falls</article-title>
+          <source>IEEE Sens. J.</source>
+          <year>2012</year>
+          <volume>12</volume>
+          <fpage>658</fpage>
+          <lpage>670</lpage>
+          <pub-id pub-id-type="doi">10.1109/JSEN.2011.2146246</pub-id>
+        </citation>
+      </ref>
+      <ref id="B11-sensors-17-00198">
+        <label>11.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Habib</surname>
+              <given-names>M.A.</given-names>
+            </name>
+            <name>
+              <surname>Mohktar</surname>
+              <given-names>M.S.</given-names>
+            </name>
+            <name>
+              <surname>Kamaruzzaman</surname>
+              <given-names>S.B.</given-names>
+            </name>
+            <name>
+              <surname>Lim</surname>
+              <given-names>K.S.</given-names>
+            </name>
+            <name>
+              <surname>Pin</surname>
+              <given-names>T.M.</given-names>
+            </name>
+            <name>
+              <surname>Ibrahim</surname>
+              <given-names>F.</given-names>
+            </name>
+          </person-group>
+          <article-title>Smartphone-Based Solutions for Fall Detection and Prevention: Challenges and Open Issues</article-title>
+          <source>Sensors</source>
+          <year>2014</year>
+          <volume>14</volume>
+          <fpage>7181</fpage>
+          <lpage>7208</lpage>
+          <pub-id pub-id-type="doi">10.3390/s140407181</pub-id>
+          <pub-id pub-id-type="pmid">24759116</pub-id>
+        </citation>
+      </ref>
+      <ref id="B12-sensors-17-00198">
+        <label>12.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Casilari</surname>
+              <given-names>E.</given-names>
+            </name>
+            <name>
+              <surname>Luque</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Mor&#xF3;n</surname>
+              <given-names>M.J.</given-names>
+            </name>
+          </person-group>
+          <article-title>Analysis of Android Device-Based Solutions for Fall Detection</article-title>
+          <source>Sensors</source>
+          <year>2015</year>
+          <volume>15</volume>
+          <fpage>17827</fpage>
+          <lpage>17894</lpage>
+          <pub-id pub-id-type="doi">10.3390/s150817827</pub-id>
+          <pub-id pub-id-type="pmid">26213928</pub-id>
+        </citation>
+      </ref>
+      <ref id="B13-sensors-17-00198">
+        <label>13.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Yuan</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Tan</surname>
+              <given-names>K.K.</given-names>
+            </name>
+            <name>
+              <surname>Lee</surname>
+              <given-names>T.H.</given-names>
+            </name>
+            <name>
+              <surname>Koh</surname>
+              <given-names>G.C.H.</given-names>
+            </name>
+          </person-group>
+          <article-title>Power-Efficient Interrupt-Driven Algorithms for Fall Detection and Classification of Activities of Daily Living</article-title>
+          <source>IEEE Sens. J.</source>
+          <year>2015</year>
+          <volume>15</volume>
+          <fpage>1377</fpage>
+          <lpage>1387</lpage>
+          <pub-id pub-id-type="doi">10.1109/JSEN.2014.2357035</pub-id>
+        </citation>
+      </ref>
+      <ref id="B14-sensors-17-00198">
+        <label>14.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>O&#x2019;Neill</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Varlow</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Silman</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Reeve</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Reid</surname>
+              <given-names>D.</given-names>
+            </name>
+            <name>
+              <surname>Todd</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Woolf</surname>
+              <given-names>A.</given-names>
+            </name>
+          </person-group>
+          <article-title>Age and sex influences on fall characteristics</article-title>
+          <source>Ann. Rheum. Dis.</source>
+          <year>1994</year>
+          <volume>53</volume>
+          <fpage>773</fpage>
+          <lpage>775</lpage>
+          <pub-id pub-id-type="doi">10.1136/ard.53.11.773</pub-id>
+          <pub-id pub-id-type="pmid">7826141</pub-id>
+        </citation>
+      </ref>
+      <ref id="B15-sensors-17-00198">
+        <label>15.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Vavoulas</surname>
+              <given-names>G.</given-names>
+            </name>
+            <name>
+              <surname>Pediaditis</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Chatzaki</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Spanakis</surname>
+              <given-names>E.</given-names>
+            </name>
+            <name>
+              <surname>Tsiknakis</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>The MobiFall Dataset: Fall Detection and Classification with a Smartphone</article-title>
+          <source>Int. J. Monit. Surveill. Technol. Res.</source>
+          <year>2014</year>
+          <volume>2</volume>
+          <fpage>44</fpage>
+          <lpage>56</lpage>
+          <pub-id pub-id-type="doi">10.4018/ijmstr.2014010103</pub-id>
+        </citation>
+      </ref>
+      <ref id="B16-sensors-17-00198">
+        <label>16.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Medrano</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Igual</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Plaza</surname>
+              <given-names>I.</given-names>
+            </name>
+            <name>
+              <surname>Castro</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>Detecting Falls as Novelties in Acceleration Patterns Acquired with Smartphones</article-title>
+          <source>PLoS ONE</source>
+          <year>2014</year>
+          <volume>9</volume>
+          <elocation-id>e94811</elocation-id>
+          <pub-id pub-id-type="doi">10.1371/journal.pone.0094811</pub-id>
+          <pub-id pub-id-type="pmid">24736626</pub-id>
+        </citation>
+      </ref>
+      <ref id="B17-sensors-17-00198">
+        <label>17.</label>
+        <citation citation-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Frank</surname>
+              <given-names>K.</given-names>
+            </name>
+            <name>
+              <surname>Vera</surname>
+              <given-names>M.J.</given-names>
+            </name>
+            <name>
+              <surname>Robertson</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Pfeifer</surname>
+              <given-names>T.</given-names>
+            </name>
+          </person-group>
+          <article-title>Bayesian Recognition of Motion Related Activities with Inertial Sensors</article-title>
+          <source>Proceedings of the 12th ACM International Conference on Ubiquitous Computing (UbiComp)</source>
+          <conf-loc>Copenhagen, Denmark</conf-loc>
+          <conf-date>26&#x2013;29 September 2010</conf-date>
+          <fpage>445</fpage>
+          <lpage>446</lpage>
+        </citation>
+      </ref>
+      <ref id="B18-sensors-17-00198">
+        <label>18.</label>
+        <citation citation-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Vilarinho</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Farshchian</surname>
+              <given-names>B.</given-names>
+            </name>
+            <name>
+              <surname>Bajer</surname>
+              <given-names>D.G.</given-names>
+            </name>
+            <name>
+              <surname>Dahl</surname>
+              <given-names>O.H.</given-names>
+            </name>
+            <name>
+              <surname>Egge</surname>
+              <given-names>I.</given-names>
+            </name>
+            <name>
+              <surname>Hegdal</surname>
+              <given-names>S.S.</given-names>
+            </name>
+            <name>
+              <surname>Lones</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Slettevold</surname>
+              <given-names>J.N.</given-names>
+            </name>
+            <name>
+              <surname>Weggersen</surname>
+              <given-names>S.M.</given-names>
+            </name>
+          </person-group>
+          <article-title>A combined smartphone and smartwatch fall detection system</article-title>
+          <source>Proceedings of the IEEE International Conference on Computer and Information Technology; Ubiquitous Computing and Communications; Dependable, Autonomic and Secure Computing; Pervasive Intelligence and Computing</source>
+          <conf-loc>Liverpool, UK</conf-loc>
+          <conf-date>26&#x2013;28 October 2015</conf-date>
+        </citation>
+      </ref>
+      <ref id="B19-sensors-17-00198">
+        <label>19.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Igual</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Medrano</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Plaza</surname>
+              <given-names>I.</given-names>
+            </name>
+          </person-group>
+          <article-title>A comparison of public datasets for acceleration-based fall detection</article-title>
+          <source>Med. Eng. Phys.</source>
+          <year>2015</year>
+          <volume>37</volume>
+          <fpage>870</fpage>
+          <lpage>878</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.medengphy.2015.06.009</pub-id>
+          <pub-id pub-id-type="pmid">26233258</pub-id>
+        </citation>
+      </ref>
+      <ref id="B20-sensors-17-00198">
+        <label>20.</label>
+        <citation citation-type="book">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Reyna</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Palomera</surname>
+              <given-names>E.</given-names>
+            </name>
+            <name>
+              <surname>Gonzalez</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>de Alba</surname>
+              <given-names>S.G.</given-names>
+            </name>
+            <name>
+              <surname>Clifford</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <source>Human Fall Detection Using 3-Axis Accelerometer</source>
+		  <comment>Technical Report</comment>
+          <publisher-name>Freescale Semiconductor</publisher-name>
+          <publisher-loc>Austin, TX, USA</publisher-loc>
+          <year>2005</year>
+        </citation>
+      </ref>
+      <ref id="B21-sensors-17-00198">
+        <label>21.</label>
+        <citation citation-type="book">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Tuck</surname>
+              <given-names>K.</given-names>
+            </name>
+          </person-group>
+          <source>Motion and Freefall Detection Using the MMA8451, 2, 3Q</source>
+		  <comment>Technical Report AN4070</comment>
+          <publisher-name>Freescale Semiconductor</publisher-name>
+          <publisher-loc>Austin, TX, USA</publisher-loc>
+          <year>2011</year>
+        </citation>
+      </ref>
+      <ref id="B22-sensors-17-00198">
+        <label>22.</label>
+        <citation citation-type="web">
+          <article-title>SISTEMIC: SisFall Dataset</article-title>
+          <comment>Available online: <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sistemic.udea.edu.co/investigacion/proyectos/english-falls/?lang=en" ext-link-type="uri">http://sistemic.udea.edu.co/investigacion/proyectos/english-falls/?lang=en</ext-link></comment>
+          <access-date>(accessed on 18 January 2017)</access-date>
+        </citation>
+      </ref>
+      <ref id="B23-sensors-17-00198">
+        <label>23.</label>
+        <citation citation-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Xue</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Jin</surname>
+              <given-names>L.</given-names>
+            </name>
+          </person-group>
+          <article-title>A Naturalistic 3D Acceleration-based Activity Dataset and Benchmark Evaluations</article-title>
+          <source>Proceedings of the IEEE International Conference on Systems Man and Cybernetics (SMC)</source>
+          <conf-loc>Istanbul, Turkey</conf-loc>
+          <conf-date>10&#x2013;13 October 2010</conf-date>
+          <fpage>4081</fpage>
+          <lpage>4085</lpage>
+        </citation>
+      </ref>
+      <ref id="B24-sensors-17-00198">
+        <label>24.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Cleland</surname>
+              <given-names>I.</given-names>
+            </name>
+            <name>
+              <surname>Kikhia</surname>
+              <given-names>B.</given-names>
+            </name>
+            <name>
+              <surname>Nugent</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Boytsov</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Hallberg</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Synnes</surname>
+              <given-names>K.</given-names>
+            </name>
+            <name>
+              <surname>McClean</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Finlay</surname>
+              <given-names>D.</given-names>
+            </name>
+          </person-group>
+          <article-title>Optimal Placement of Accelerometers for the Detection of Everyday Activities</article-title>
+          <source>Sensors</source>
+          <year>2013</year>
+          <volume>13</volume>
+          <fpage>9183</fpage>
+          <lpage>9200</lpage>
+          <pub-id pub-id-type="doi">10.3390/s130709183</pub-id>
+          <pub-id pub-id-type="pmid">23867744</pub-id>
+        </citation>
+      </ref>
+      <ref id="B25-sensors-17-00198">
+        <label>25.</label>
+        <citation citation-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>L&#xF3;pez</surname>
+              <given-names>J.D.</given-names>
+            </name>
+            <name>
+              <surname>Ocampo</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Sucerquia</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Vargas-Bonilla</surname>
+              <given-names>F.</given-names>
+            </name>
+          </person-group>
+          <article-title>Analyzing multiple accelerometer configurations to detect falls and motion</article-title>
+          <source>Proceedings of the Latin American Congress on Biomedical Engineering</source>
+          <conf-loc>Santander, Colombia</conf-loc>
+          <conf-date>26&#x2013;28 October 2016</conf-date>
+        </citation>
+      </ref>
+      <ref id="B26-sensors-17-00198">
+        <label>26.</label>
+        <citation citation-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Noury</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Fleury</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Rumeau</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Bourke</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Laighin</surname>
+              <given-names>G.</given-names>
+            </name>
+            <name>
+              <surname>Rialle</surname>
+              <given-names>V.</given-names>
+            </name>
+            <name>
+              <surname>Lundy</surname>
+              <given-names>J.</given-names>
+            </name>
+          </person-group>
+          <article-title>Fall detection&#x2014;Principles and Methods</article-title>
+          <source>Proceedings of the 29th Annual International Conference of the IEEE Engineering in Medicine and Biology Society</source>
+          <conf-loc>Lyon, France</conf-loc>
+          <conf-date>22&#x2013;26 August 2007</conf-date>
+          <fpage>1663</fpage>
+          <lpage>1666</lpage>
+        </citation>
+      </ref>
+      <ref id="B27-sensors-17-00198">
+        <label>27.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Noury</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Rumeau</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Bourke</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>&#xD3;Laighin</surname>
+              <given-names>G.</given-names>
+            </name>
+            <name>
+              <surname>Lundy</surname>
+              <given-names>J.</given-names>
+            </name>
+          </person-group>
+          <article-title>A proposal for the classification and evaluation of fall detectors</article-title>
+          <source>IRBM</source>
+          <year>2008</year>
+          <volume>29</volume>
+          <fpage>340</fpage>
+          <lpage>349</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.irbm.2008.08.002</pub-id>
+        </citation>
+      </ref>
+      <ref id="B28-sensors-17-00198">
+        <label>28.</label>
+        <citation citation-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Klenk</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Becker</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Lieken</surname>
+              <given-names>F.</given-names>
+            </name>
+            <name>
+              <surname>Nicolai</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Maetzler</surname>
+              <given-names>W.</given-names>
+            </name>
+            <name>
+              <surname>Alt</surname>
+              <given-names>W.</given-names>
+            </name>
+            <name>
+              <surname>Zijlstra</surname>
+              <given-names>W.</given-names>
+            </name>
+            <name>
+              <surname>Hausdorff</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>van Lummel</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Chiari</surname>
+              <given-names>L.</given-names>
+            </name>
+            <etal/>
+          </person-group>
+          <article-title>Comparison of acceleration signals of simulated and real-world backward falls</article-title>
+          <source>Med. Eng. Phys.</source>
+          <year>2011</year>
+          <volume>33</volume>
+          <fpage>368</fpage>
+          <lpage>373</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.medengphy.2010.11.003</pub-id>
+          <pub-id pub-id-type="pmid">21123104</pub-id>
+        </citation>
+      </ref>
+      <ref id="B29-sensors-17-00198">
+        <label>29.</label>
+        <citation citation-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Koshmak</surname>
+              <given-names>G.A.</given-names>
+            </name>
+            <name>
+              <surname>Linden</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Loutfi</surname>
+              <given-names>A.</given-names>
+            </name>
+          </person-group>
+          <article-title>Evaluation of the Android-Based Fall Detection System with Physiological Data Monitoring</article-title>
+          <source>Proceedings of the 35th Annual International Conference of the IEEE Engineering in Medicine and Biology Society (EMBC)</source>
+          <conf-loc>Osaka, Japan</conf-loc>
+          <conf-date>3&#x2013;7 July 2013</conf-date>
+          <fpage>1164</fpage>
+          <lpage>1168</lpage>
+        </citation>
+      </ref>
+    </ref-list>
+    <sec sec-type="display-objects">
+      <title>Figures and Tables</title>
+      <fig id="sensors-17-00198-f001" position="float">
+        <label>Figure 1</label>
+        <caption>
+          <p>Device used for acquisition. The self-developed embedded device included two accelerometers and a gyroscope. It was fixed to the waist of the participants.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="sensors-17-00198-g001.tif"/>
+      </fig>
+      <fig id="sensors-17-00198-f002" position="float">
+        <label>Figure 2</label>
+        <caption>
+          <p>Example of processing and classification. The features are computed after the filtering process of the raw data. (<bold>a</bold>) ADL D11 gives <inline-formula>
+            <mml:math id="mm50" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>C</mml:mi>
+                  <mml:mn>8</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> values below threshold <inline-formula>
+            <mml:math id="mm51" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>T</mml:mi>
+                  <mml:mn>1</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> (horizontal <bold>red</bold> line); (<bold>b</bold>) Feature <inline-formula>
+            <mml:math id="mm52" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>C</mml:mi>
+                  <mml:mn>8</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> crosses the threshold when the fall in activity F05 is detected.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="sensors-17-00198-g002.tif"/>
+      </fig>
+      <fig id="sensors-17-00198-f003" position="float">
+        <label>Figure 3</label>
+        <caption>
+          <p>Accuracy obtained in validation after a 10-fold cross-validation without (raw data) and with preprocessing (filtered). Features <inline-formula>
+            <mml:math id="mm59" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>C</mml:mi>
+                  <mml:mn>2</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> and <inline-formula>
+            <mml:math id="mm60" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>C</mml:mi>
+                  <mml:mn>8</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> achieved 95.0% and 96.1% of accuracy when the filter was applied, respectively. However, not all features improved their performance after filtering.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="sensors-17-00198-g003.tif"/>
+      </fig>
+      <fig id="sensors-17-00198-f004" position="float">
+        <label>Figure 4</label>
+        <caption>
+          <p>Maximum value per activity obtained with <inline-formula>
+            <mml:math id="mm97" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>C</mml:mi>
+                  <mml:mn>8</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula>. Most <inline-formula>
+            <mml:math id="mm98" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>T</mml:mi>
+                  <mml:mn>1</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> threshold crossings (horizontal <bold>red</bold> line) are contained in activities D04, D18 and F11.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="sensors-17-00198-g004.tif"/>
+      </fig>
+      <table-wrap id="sensors-17-00198-t001" position="float">
+        <object-id pub-id-type="pii">sensors-17-00198-t001_Table 1</object-id>
+        <label>Table 1</label>
+        <caption>
+          <p>Types of falls selected for this work.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Code</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Activity</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Trials</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle">F01</td>
+              <td align="left" valign="middle">Fall forward while walking caused by a slip</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F02</td>
+              <td align="left" valign="middle">Fall backward while walking caused by a slip</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F03</td>
+              <td align="left" valign="middle">Lateral fall while walking caused by a slip</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F04</td>
+              <td align="left" valign="middle">Fall forward while walking caused by a trip</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F05</td>
+              <td align="left" valign="middle">Fall forward while jogging caused by a trip</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F06</td>
+              <td align="left" valign="middle">Vertical fall while walking caused by fainting</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F07</td>
+              <td align="left" valign="middle">Fall while walking, with use of hands in a table to dampen fall, caused by fainting</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F08</td>
+              <td align="left" valign="middle">Fall forward when trying to get up</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F09</td>
+              <td align="left" valign="middle">Lateral fall when trying to get up</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F10</td>
+              <td align="left" valign="middle">Fall forward when trying to sit down</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F11</td>
+              <td align="left" valign="middle">Fall backward when trying to sit down</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F12</td>
+              <td align="left" valign="middle">Lateral fall when trying to sit down</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F13</td>
+              <td align="left" valign="middle">Fall forward while sitting, caused by fainting or falling asleep</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">F14</td>
+              <td align="left" valign="middle">Fall backward while sitting, caused by fainting or falling asleep</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">15 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">F15</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin">Lateral fall while sitting, caused by fainting or falling asleep</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">5</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">15 s</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="sensors-17-00198-t002" position="float">
+        <object-id pub-id-type="pii">sensors-17-00198-t002_Table 2</object-id>
+        <label>Table 2</label>
+        <caption>
+          <p>Types of activities of daily living selected for this work.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Code</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Activity</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Trials</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle">D01</td>
+              <td align="left" valign="middle">Walking slowly</td>
+              <td align="center" valign="middle">1</td>
+              <td align="center" valign="middle">100 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D02</td>
+              <td align="left" valign="middle">Walking quickly</td>
+              <td align="center" valign="middle">1</td>
+              <td align="center" valign="middle">100 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D03</td>
+              <td align="left" valign="middle">Jogging slowly</td>
+              <td align="center" valign="middle">1</td>
+              <td align="center" valign="middle">100 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D04</td>
+              <td align="left" valign="middle">Jogging quickly</td>
+              <td align="center" valign="middle">1</td>
+              <td align="center" valign="middle">100 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D05</td>
+              <td align="left" valign="middle">Walking upstairs and downstairs slowly</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">25 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D06</td>
+              <td align="left" valign="middle">Walking upstairs and downstairs quickly</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">25 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D07</td>
+              <td align="left" valign="middle">Slowly sit in a half height chair, wait a moment, and up slowly</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D08</td>
+              <td align="left" valign="middle">Quickly sit in a half height chair, wait a moment, and up quickly</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D09</td>
+              <td align="left" valign="middle">Slowly sit in a low height chair, wait a moment, and up slowly</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D10</td>
+              <td align="left" valign="middle">Quickly sit in a low height chair, wait a moment, and up quickly</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D11</td>
+              <td align="left" valign="middle">Sitting a moment, trying to get up, and collapse into a chair</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D12</td>
+              <td align="left" valign="middle">Sitting a moment, lying slowly, wait a moment, and sit again</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D13</td>
+              <td align="left" valign="middle">Sitting a moment, lying quickly, wait a moment, and sit again</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D14</td>
+              <td align="left" valign="middle">Being on one&#x2019;s back change to lateral position, wait a moment, and change to one&#x2019;s back</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D15</td>
+              <td align="left" valign="middle">Standing, slowly bending at knees, and getting up</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D16</td>
+              <td align="left" valign="middle">Standing, slowly bending without bending knees, and getting up</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D17</td>
+              <td align="left" valign="middle">Standing, get into a car, remain seated and get out of the car</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">25 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">D18</td>
+              <td align="left" valign="middle">Stumble while walking</td>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle">12 s</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">D19</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin">Gently jump without falling (trying to reach a high object)</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">5</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">12 s</td>
+            </tr>
+          </tbody>
+         </table>
+        </table-wrap>
+        <table-wrap id="sensors-17-00198-t003" position="float">
+        <object-id pub-id-type="pii">sensors-17-00198-t003_Table 3</object-id>
+        <label>Table 3</label>
+        <caption>
+          <p>Age, height and weight of the participants.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin"> </th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Sex</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Age</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Height (m)</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Weight (kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan="2" align="center" valign="middle" style="border-bottom:solid thin">Elderly</td>
+              <td align="center" valign="middle">Female</td>
+              <td align="center" valign="middle">62&#x2013;75</td>
+              <td align="center" valign="middle">1.50&#x2013;1.69</td>
+              <td align="center" valign="middle">50&#x2013;72</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Male</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">60&#x2013;71</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">1.63&#x2013;1.71</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">56&#x2013;102</td>
+            </tr>
+            <tr>
+              <td rowspan="2" align="center" valign="middle" style="border-bottom:solid thin">Adult</td>
+              <td align="center" valign="middle">Female</td>
+              <td align="center" valign="middle">19&#x2013;30</td>
+              <td align="center" valign="middle">1.49&#x2013;1.69</td>
+              <td align="center" valign="middle">42&#x2013;63</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Male</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">19&#x2013;30</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">1.65&#x2013;1.83</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">58&#x2013;81</td>
+            </tr>
+          </tbody>
+        </table>
+        </table-wrap>
+        <table-wrap id="sensors-17-00198-t004" position="float">
+        <object-id pub-id-type="pii">sensors-17-00198-t004_Table 4</object-id>
+        <label>Table 4</label>
+        <caption>
+          <p>Feature extraction characteristics used to test the proposed dataset.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Type</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Code</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Feature</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Equation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan=" 3" align="center" valign="middle" style="border-bottom:solid thin">Amplitude</td>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm9" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>1</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">Sum vector magnitude</td>
+              <td align="left" valign="middle"><inline-formula>
+                  <mml:math id="mm10" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>1</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mi>R</mml:mi>
+                          <mml:mi>M</mml:mi>
+                          <mml:mi>S</mml:mi>
+                          <mml:mrow>
+                            <mml:mo>(</mml:mo>
+                            <mml:mover accent="true">
+                              <mml:mi>a</mml:mi>
+                              <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                            </mml:mover>
+                            <mml:mrow>
+                              <mml:mo>[</mml:mo>
+                              <mml:mi>k</mml:mi>
+                              <mml:mo>]</mml:mo>
+                            </mml:mrow>
+                            <mml:mo>)</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:msqrt>
+                            <mml:mrow>
+                              <mml:msubsup>
+                                <mml:mi>a</mml:mi>
+                                <mml:mi>x</mml:mi>
+                                <mml:mn>2</mml:mn>
+                              </mml:msubsup>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo>+</mml:mo>
+                              <mml:msubsup>
+                                <mml:mi>a</mml:mi>
+                                <mml:mi>y</mml:mi>
+                                <mml:mn>2</mml:mn>
+                              </mml:msubsup>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo>+</mml:mo>
+                              <mml:msubsup>
+                                <mml:mi>a</mml:mi>
+                                <mml:mi>z</mml:mi>
+                                <mml:mn>2</mml:mn>
+                              </mml:msubsup>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                            </mml:mrow>
+                          </mml:msqrt>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm11" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>2</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">Sum vector magnitude on horizontal plane</td>
+              <td align="left" valign="middle"><inline-formula>
+                  <mml:math id="mm12" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>2</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:msqrt>
+                            <mml:mrow>
+                              <mml:msubsup>
+                                <mml:mi>a</mml:mi>
+                                <mml:mi>x</mml:mi>
+                                <mml:mn>2</mml:mn>
+                              </mml:msubsup>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo>+</mml:mo>
+                              <mml:msubsup>
+                                <mml:mi>a</mml:mi>
+                                <mml:mi>z</mml:mi>
+                                <mml:mn>2</mml:mn>
+                              </mml:msubsup>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                            </mml:mrow>
+                          </mml:msqrt>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm13" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>3</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Maximum peak-to-peak acceleration amplitude</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm14" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>3</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mi>R</mml:mi>
+                          <mml:mi>M</mml:mi>
+                          <mml:mi>S</mml:mi>
+                          <mml:mfenced separators="" open="(" close=")">
+                            <mml:mi>max</mml:mi>
+                            <mml:mrow>
+                              <mml:mo>(</mml:mo>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                              </mml:mover>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo>)</mml:mo>
+                            </mml:mrow>
+                            <mml:mo>&#x2212;</mml:mo>
+                            <mml:mi>min</mml:mi>
+                            <mml:mrow>
+                              <mml:mo>(</mml:mo>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                              </mml:mover>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo>)</mml:mo>
+                            </mml:mrow>
+                          </mml:mfenced>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td rowspan=" 3" align="center" valign="middle" style="border-bottom:solid thin">Orientation</td>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm15" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>4</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">Angle between <italic>z</italic>-axis and vertical</td>
+              <td align="left" valign="middle"><inline-formula>
+                  <mml:math id="mm16" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>4</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mi>atan</mml:mi>
+                          <mml:mn>2</mml:mn>
+                          <mml:mfenced separators="" open="(" close=")">
+                            <mml:msqrt>
+                              <mml:mrow>
+                                <mml:msup>
+                                  <mml:mrow>
+                                    <mml:mo>(</mml:mo>
+                                    <mml:msub>
+                                      <mml:mover accent="true">
+                                        <mml:mi>a</mml:mi>
+                                        <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                      </mml:mover>
+                                      <mml:mi>x</mml:mi>
+                                    </mml:msub>
+                                    <mml:mrow>
+                                      <mml:mo>[</mml:mo>
+                                      <mml:mi>k</mml:mi>
+                                      <mml:mo>]</mml:mo>
+                                    </mml:mrow>
+                                    <mml:mo>)</mml:mo>
+                                  </mml:mrow>
+                                  <mml:mn>2</mml:mn>
+                                </mml:msup>
+                                <mml:mo>+</mml:mo>
+                                <mml:msup>
+                                  <mml:mrow>
+                                    <mml:mo>(</mml:mo>
+                                    <mml:msub>
+                                      <mml:mover accent="true">
+                                        <mml:mi>a</mml:mi>
+                                        <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                      </mml:mover>
+                                      <mml:mi>z</mml:mi>
+                                    </mml:msub>
+                                    <mml:mrow>
+                                      <mml:mo>[</mml:mo>
+                                      <mml:mi>k</mml:mi>
+                                      <mml:mo>]</mml:mo>
+                                    </mml:mrow>
+                                    <mml:mo>)</mml:mo>
+                                  </mml:mrow>
+                                  <mml:mn>2</mml:mn>
+                                </mml:msup>
+                              </mml:mrow>
+                            </mml:msqrt>
+                            <mml:mo>,</mml:mo>
+                            <mml:mo>&#x2212;</mml:mo>
+                            <mml:msub>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                              </mml:mover>
+                              <mml:mi>y</mml:mi>
+                            </mml:msub>
+                            <mml:mrow>
+                              <mml:mo>[</mml:mo>
+                              <mml:mi>k</mml:mi>
+                              <mml:mo>]</mml:mo>
+                            </mml:mrow>
+                          </mml:mfenced>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm17" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>5</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">Orientation of person&#x2019;s trunk</td>
+              <td align="left" valign="middle"><inline-formula>
+                  <mml:math id="mm18" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>5</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mi>&#x3C3;</mml:mi>
+                          <mml:mfenced separators="" open="(" close=")">
+                            <mml:mi>atan</mml:mi>
+                            <mml:mfenced separators="" open="(" close=")">
+                              <mml:mfrac>
+                                <mml:mrow>
+                                  <mml:mi>R</mml:mi>
+                                  <mml:mi>M</mml:mi>
+                                  <mml:mi>S</mml:mi>
+                                  <mml:mo>(</mml:mo>
+                                  <mml:msub>
+                                    <mml:mover accent="true">
+                                      <mml:mi>a</mml:mi>
+                                      <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                    </mml:mover>
+                                    <mml:mi>x</mml:mi>
+                                  </mml:msub>
+                                  <mml:mrow>
+                                    <mml:mo>[</mml:mo>
+                                    <mml:mi>k</mml:mi>
+                                    <mml:mo>]</mml:mo>
+                                  </mml:mrow>
+                                  <mml:mo>,</mml:mo>
+                                  <mml:msub>
+                                    <mml:mover accent="true">
+                                      <mml:mi>a</mml:mi>
+                                      <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                    </mml:mover>
+                                    <mml:mi>z</mml:mi>
+                                  </mml:msub>
+                                  <mml:mrow>
+                                    <mml:mo>[</mml:mo>
+                                    <mml:mi>k</mml:mi>
+                                    <mml:mo>]</mml:mo>
+                                  </mml:mrow>
+                                  <mml:mo>)</mml:mo>
+                                </mml:mrow>
+                                <mml:mrow>
+                                  <mml:msub>
+                                    <mml:mover accent="true">
+                                      <mml:mi>a</mml:mi>
+                                      <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                    </mml:mover>
+                                    <mml:mi>y</mml:mi>
+                                  </mml:msub>
+                                  <mml:mrow>
+                                    <mml:mo>[</mml:mo>
+                                    <mml:mi>k</mml:mi>
+                                    <mml:mo>]</mml:mo>
+                                  </mml:mrow>
+                                </mml:mrow>
+                              </mml:mfrac>
+                            </mml:mfenced>
+                          </mml:mfenced>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm19" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>6</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Orientation change in horizontal plane</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm20" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>6</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mi>mean</mml:mi>
+                          <mml:mrow>
+                            <mml:mo stretchy="false">(</mml:mo>
+                            <mml:msub>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo>&#x2192;</mml:mo>
+                              </mml:mover>
+                              <mml:mi>x</mml:mi>
+                            </mml:msub>
+                            <mml:mrow>
+                              <mml:mo>[</mml:mo>
+                              <mml:mi>k</mml:mi>
+                              <mml:mo>&#x2212;</mml:mo>
+                              <mml:mi>N</mml:mi>
+                              <mml:mo>]</mml:mo>
+                            </mml:mrow>
+                            <mml:mo stretchy="false">)</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>&#xB7;</mml:mo>
+                          <mml:mi>mean</mml:mi>
+                          <mml:mrow>
+                            <mml:mo stretchy="false">(</mml:mo>
+                            <mml:msub>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo>&#x2192;</mml:mo>
+                              </mml:mover>
+                              <mml:mi>x</mml:mi>
+                            </mml:msub>
+                            <mml:mrow>
+                              <mml:mo>[</mml:mo>
+                              <mml:mi>k</mml:mi>
+                              <mml:mo>]</mml:mo>
+                            </mml:mrow>
+                            <mml:mo stretchy="false">)</mml:mo>
+                          </mml:mrow>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Time</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm21" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>7</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Jerk (rate of acceleration change)</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm22" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>7</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mfrac>
+                            <mml:mrow>
+                              <mml:msub>
+                                <mml:mover accent="true">
+                                  <mml:mi>a</mml:mi>
+                                  <mml:mo>&#x2192;</mml:mo>
+                                </mml:mover>
+                                <mml:mi>x</mml:mi>
+                              </mml:msub>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo>&#x2212;</mml:mo>
+                              <mml:msub>
+                                <mml:mover accent="true">
+                                  <mml:mi>a</mml:mi>
+                                  <mml:mo>&#x2192;</mml:mo>
+                                </mml:mover>
+                                <mml:mi>x</mml:mi>
+                              </mml:msub>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>&#x2212;</mml:mo>
+                                <mml:mi>N</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                            </mml:mrow>
+                            <mml:mrow>
+                              <mml:mi>t</mml:mi>
+                              <mml:mo>[</mml:mo>
+                              <mml:mi>k</mml:mi>
+                              <mml:mo>]</mml:mo>
+                              <mml:mo>&#x2212;</mml:mo>
+                              <mml:mi>t</mml:mi>
+                              <mml:mo>[</mml:mo>
+                              <mml:mi>k</mml:mi>
+                              <mml:mo>&#x2212;</mml:mo>
+                              <mml:mi>N</mml:mi>
+                              <mml:mo>]</mml:mo>
+                            </mml:mrow>
+                          </mml:mfrac>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td rowspan=" 2" align="center" valign="middle" style="border-bottom:solid thin">Statistics</td>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm23" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>8</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">Standard deviation magnitude on horizontal plane</td>
+              <td align="left" valign="middle"><inline-formula>
+                <mml:math id="mm24" display="block">
+                  <mml:semantics>
+                    <mml:mstyle scriptlevel="0" displaystyle="true">
+                      <mml:mrow>
+                        <mml:msub>
+                          <mml:mi>C</mml:mi>
+                          <mml:mn>8</mml:mn>
+                        </mml:msub>
+                        <mml:mrow>
+                          <mml:mo>[</mml:mo>
+                          <mml:mi>k</mml:mi>
+                          <mml:mo>]</mml:mo>
+                        </mml:mrow>
+                        <mml:mo>=</mml:mo>
+                        <mml:msqrt>
+                          <mml:mrow>
+                            <mml:msubsup>
+                              <mml:mi>&#x3C3;</mml:mi>
+                              <mml:mi>x</mml:mi>
+                              <mml:mn>2</mml:mn>
+                            </mml:msubsup>
+                            <mml:mrow>
+                              <mml:mo>[</mml:mo>
+                              <mml:mi>k</mml:mi>
+                              <mml:mo>]</mml:mo>
+                            </mml:mrow>
+                            <mml:mo>+</mml:mo>
+                            <mml:msubsup>
+                              <mml:mi>&#x3C3;</mml:mi>
+                              <mml:mi>z</mml:mi>
+                              <mml:mn>2</mml:mn>
+                            </mml:msubsup>
+                            <mml:mrow>
+                              <mml:mo>[</mml:mo>
+                              <mml:mi>k</mml:mi>
+                              <mml:mo>]</mml:mo>
+                            </mml:mrow>
+                          </mml:mrow>
+                        </mml:msqrt>
+                      </mml:mrow>
+                    </mml:mstyle>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>; with <inline-formula>
+                <mml:math id="mm25" display="block">
+                  <mml:semantics>
+                    <mml:mstyle scriptlevel="0" displaystyle="true">
+                      <mml:mrow>
+                        <mml:msub>
+                          <mml:mi>&#x3C3;</mml:mi>
+                          <mml:mi>i</mml:mi>
+                        </mml:msub>
+                        <mml:mo>=</mml:mo>
+                        <mml:mi>std</mml:mi>
+                        <mml:mfenced separators="" open="(" close=")">
+                          <mml:msub>
+                            <mml:mover accent="true">
+                              <mml:mi>a</mml:mi>
+                              <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                            </mml:mover>
+                            <mml:mi>i</mml:mi>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                        </mml:mfenced>
+                      </mml:mrow>
+                    </mml:mstyle>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm26" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>9</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Standard deviation magnitude</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm27" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>9</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:msqrt>
+                            <mml:mrow>
+                              <mml:msubsup>
+                                <mml:mi>&#x3C3;</mml:mi>
+                                <mml:mi>x</mml:mi>
+                                <mml:mn>2</mml:mn>
+                              </mml:msubsup>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo>+</mml:mo>
+                              <mml:msubsup>
+                                <mml:mi>&#x3C3;</mml:mi>
+                                <mml:mi>y</mml:mi>
+                                <mml:mn>2</mml:mn>
+                              </mml:msubsup>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo>+</mml:mo>
+                              <mml:msubsup>
+                                <mml:mi>&#x3C3;</mml:mi>
+                                <mml:mi>z</mml:mi>
+                                <mml:mn>2</mml:mn>
+                              </mml:msubsup>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                            </mml:mrow>
+                          </mml:msqrt>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td rowspan=" 5" align="center" valign="middle" style="border-bottom:solid thin">Area</td>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm28" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>10</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">Signal magnitude area</td>
+              <td align="left" valign="middle"><inline-formula>
+                  <mml:math id="mm29" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>10</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mfrac>
+                            <mml:mn>1</mml:mn>
+                            <mml:mi>N</mml:mi>
+                          </mml:mfrac>
+                          <mml:mfenced separators="" open="(" close=")">
+                            <mml:mrow>
+                              <mml:mo>&#x222B;</mml:mo>
+                              <mml:mo stretchy="false">|</mml:mo>
+                            </mml:mrow>
+                            <mml:msub>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                              </mml:mover>
+                              <mml:mi>x</mml:mi>
+                            </mml:msub>
+                            <mml:mrow>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo stretchy="false">|</mml:mo>
+                              <mml:mi>d</mml:mi>
+                              <mml:mi>t</mml:mi>
+                              <mml:mo>+</mml:mo>
+                              <mml:mo>&#x222B;</mml:mo>
+                              <mml:mo stretchy="false">|</mml:mo>
+                            </mml:mrow>
+                            <mml:msub>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                              </mml:mover>
+                              <mml:mi>y</mml:mi>
+                            </mml:msub>
+                            <mml:mrow>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo stretchy="false">|</mml:mo>
+                              <mml:mi>d</mml:mi>
+                              <mml:mi>t</mml:mi>
+                              <mml:mo>+</mml:mo>
+                              <mml:mo>&#x222B;</mml:mo>
+                              <mml:mo stretchy="false">|</mml:mo>
+                            </mml:mrow>
+                            <mml:msub>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                              </mml:mover>
+                              <mml:mi>z</mml:mi>
+                            </mml:msub>
+                            <mml:mrow>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo stretchy="false">|</mml:mo>
+                              <mml:mi>d</mml:mi>
+                              <mml:mi>t</mml:mi>
+                            </mml:mrow>
+                          </mml:mfenced>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm30" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>11</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">Signal magnitude area on horizontal plane</td>
+              <td align="left" valign="middle"><inline-formula>
+                  <mml:math id="mm31" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>11</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mfrac>
+                            <mml:mn>1</mml:mn>
+                            <mml:mi>N</mml:mi>
+                          </mml:mfrac>
+                          <mml:mfenced separators="" open="(" close=")">
+                            <mml:mrow>
+                              <mml:mo>&#x222B;</mml:mo>
+                              <mml:mo stretchy="false">|</mml:mo>
+                            </mml:mrow>
+                            <mml:msub>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                              </mml:mover>
+                              <mml:mi>x</mml:mi>
+                            </mml:msub>
+                            <mml:mrow>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo stretchy="false">|</mml:mo>
+                              <mml:mi>d</mml:mi>
+                              <mml:mi>t</mml:mi>
+                              <mml:mo>+</mml:mo>
+                              <mml:mo>&#x222B;</mml:mo>
+                              <mml:mo stretchy="false">|</mml:mo>
+                            </mml:mrow>
+                            <mml:msub>
+                              <mml:mover accent="true">
+                                <mml:mi>a</mml:mi>
+                                <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                              </mml:mover>
+                              <mml:mi>z</mml:mi>
+                            </mml:msub>
+                            <mml:mrow>
+                              <mml:mrow>
+                                <mml:mo>[</mml:mo>
+                                <mml:mi>k</mml:mi>
+                                <mml:mo>]</mml:mo>
+                              </mml:mrow>
+                              <mml:mo stretchy="false">|</mml:mo>
+                              <mml:mi>d</mml:mi>
+                              <mml:mi>t</mml:mi>
+                            </mml:mrow>
+                          </mml:mfenced>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm32" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>12</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">Activity signal magnitude area</td>
+              <td align="left" valign="middle"><inline-formula>
+                  <mml:math id="mm33" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>12</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mo>&#x222B;</mml:mo>
+                          <mml:mfenced open="(" close=")">
+                            <mml:msqrt>
+                              <mml:mrow>
+                                <mml:msubsup>
+                                  <mml:mover accent="true">
+                                    <mml:mi>a</mml:mi>
+                                    <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                  </mml:mover>
+                                  <mml:mi>x</mml:mi>
+                                  <mml:mn>2</mml:mn>
+                                </mml:msubsup>
+                                <mml:mrow>
+                                  <mml:mo>[</mml:mo>
+                                  <mml:mi>n</mml:mi>
+                                  <mml:mo>]</mml:mo>
+                                </mml:mrow>
+                                <mml:mo>+</mml:mo>
+                                <mml:msubsup>
+                                  <mml:mover accent="true">
+                                    <mml:mi>a</mml:mi>
+                                    <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                  </mml:mover>
+                                  <mml:mi>y</mml:mi>
+                                  <mml:mn>2</mml:mn>
+                                </mml:msubsup>
+                                <mml:mrow>
+                                  <mml:mo>[</mml:mo>
+                                  <mml:mi>n</mml:mi>
+                                  <mml:mo>]</mml:mo>
+                                </mml:mrow>
+                                <mml:mo>+</mml:mo>
+                                <mml:msubsup>
+                                  <mml:mover accent="true">
+                                    <mml:mi>a</mml:mi>
+                                    <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                  </mml:mover>
+                                  <mml:mi>z</mml:mi>
+                                  <mml:mn>2</mml:mn>
+                                </mml:msubsup>
+                                <mml:mrow>
+                                  <mml:mo>[</mml:mo>
+                                  <mml:mi>n</mml:mi>
+                                  <mml:mo>]</mml:mo>
+                                </mml:mrow>
+                              </mml:mrow>
+                            </mml:msqrt>
+                          </mml:mfenced>
+                          <mml:mi>d</mml:mi>
+                          <mml:mi>n</mml:mi>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm34" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>13</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">Activity signal magnitude area on horizontal plane</td>
+              <td align="left" valign="middle"><inline-formula>
+                  <mml:math id="mm35" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>13</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mo>&#x222B;</mml:mo>
+                          <mml:mfenced open="(" close=")">
+                            <mml:msqrt>
+                              <mml:mrow>
+                                <mml:msubsup>
+                                  <mml:mover accent="true">
+                                    <mml:mi>a</mml:mi>
+                                    <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                  </mml:mover>
+                                  <mml:mi>x</mml:mi>
+                                  <mml:mn>2</mml:mn>
+                                </mml:msubsup>
+                                <mml:mrow>
+                                  <mml:mo>[</mml:mo>
+                                  <mml:mi>n</mml:mi>
+                                  <mml:mo>]</mml:mo>
+                                </mml:mrow>
+                                <mml:mo>+</mml:mo>
+                                <mml:msubsup>
+                                  <mml:mover accent="true">
+                                    <mml:mi>a</mml:mi>
+                                    <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                  </mml:mover>
+                                  <mml:mi>z</mml:mi>
+                                  <mml:mn>2</mml:mn>
+                                </mml:msubsup>
+                                <mml:mrow>
+                                  <mml:mo>[</mml:mo>
+                                  <mml:mi>n</mml:mi>
+                                  <mml:mo>]</mml:mo>
+                                </mml:mrow>
+                              </mml:mrow>
+                            </mml:msqrt>
+                          </mml:mfenced>
+                          <mml:mi>d</mml:mi>
+                          <mml:mi>n</mml:mi>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm36" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>14</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Velocity (approx.)</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm37" display="block">
+                    <mml:semantics>
+                      <mml:mstyle scriptlevel="0" displaystyle="true">
+                        <mml:mrow>
+                          <mml:msub>
+                            <mml:mi>C</mml:mi>
+                            <mml:mn>14</mml:mn>
+                          </mml:msub>
+                          <mml:mrow>
+                            <mml:mo>[</mml:mo>
+                            <mml:mi>k</mml:mi>
+                            <mml:mo>]</mml:mo>
+                          </mml:mrow>
+                          <mml:mo>=</mml:mo>
+                          <mml:mfrac>
+                            <mml:mn>1</mml:mn>
+                            <mml:mi>N</mml:mi>
+                          </mml:mfrac>
+                          <mml:msqrt>
+                            <mml:mrow>
+                              <mml:msup>
+                                <mml:mfenced separators="" open="(" close=")">
+                                  <mml:mo>&#x222B;</mml:mo>
+                                  <mml:msub>
+                                    <mml:mover accent="true">
+                                      <mml:mi>a</mml:mi>
+                                      <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                    </mml:mover>
+                                    <mml:mi>x</mml:mi>
+                                  </mml:msub>
+                                  <mml:mrow>
+                                    <mml:mo>[</mml:mo>
+                                    <mml:mi>k</mml:mi>
+                                    <mml:mo>]</mml:mo>
+                                  </mml:mrow>
+                                  <mml:mi>d</mml:mi>
+                                  <mml:mi>t</mml:mi>
+                                </mml:mfenced>
+                                <mml:mn>2</mml:mn>
+                              </mml:msup>
+                              <mml:mo>+</mml:mo>
+                              <mml:msup>
+                                <mml:mfenced separators="" open="(" close=")">
+                                  <mml:mo>&#x222B;</mml:mo>
+                                  <mml:msub>
+                                    <mml:mover accent="true">
+                                      <mml:mi>a</mml:mi>
+                                      <mml:mo stretchy="false">&#x2DC;</mml:mo>
+                                    </mml:mover>
+                                    <mml:mi>z</mml:mi>
+                                  </mml:msub>
+                                  <mml:mrow>
+                                    <mml:mo>[</mml:mo>
+                                    <mml:mi>k</mml:mi>
+                                    <mml:mo>]</mml:mo>
+                                  </mml:mrow>
+                                  <mml:mi>d</mml:mi>
+                                  <mml:mi>t</mml:mi>
+                                </mml:mfenced>
+                                <mml:mn>2</mml:mn>
+                              </mml:msup>
+                            </mml:mrow>
+                          </mml:msqrt>
+                        </mml:mrow>
+                      </mml:mstyle>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="sensors-17-00198-t005" position="float">
+        <object-id pub-id-type="pii">sensors-17-00198-t005_Table 5</object-id>
+        <label>Table 5</label>
+        <caption>
+          <p>Sensitivity (SE), specificity (SP) and accuracy (AC) after training with young adults and validating either with young adults or elderly people.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th rowspan="2" align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Feature</th>
+              <th colspan="3" align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Young</th>
+              <th colspan="3" align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Elderly</th>
+            </tr>
+            <tr>
+              <th align="center" valign="middle" style="border-bottom:solid thin">SE</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin">SP</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin">AC</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin">SE</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin">SP</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin">AC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm76" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>2</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle"><bold>94.28</bold></td>
+              <td align="center" valign="middle">96.13</td>
+              <td align="center" valign="middle">95.21</td>
+              <td align="center" valign="middle"><bold>77.33</bold></td>
+              <td align="center" valign="middle">97.67</td>
+              <td align="center" valign="middle">87.49</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm77" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>3</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle"><bold>98.53</bold></td>
+              <td align="center" valign="middle">80.50</td>
+              <td align="center" valign="middle">89.51</td>
+              <td align="center" valign="middle"><bold>84.00</bold></td>
+              <td align="center" valign="middle">96.42</td>
+              <td align="center" valign="middle">90.21</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm78" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>8</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle"><bold>95.54</bold></td>
+              <td align="center" valign="middle">96.38</td>
+              <td align="center" valign="middle">95.96</td>
+              <td align="center" valign="middle"><bold>85.33</bold></td>
+              <td align="center" valign="middle">98.10</td>
+              <td align="center" valign="middle">91.72</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm79" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>9</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle"><bold>97.79</bold></td>
+              <td align="center" valign="middle">80.70</td>
+              <td align="center" valign="middle">89.25</td>
+              <td align="center" valign="middle"><bold>88.00</bold></td>
+              <td align="center" valign="middle">96.42</td>
+              <td align="center" valign="middle">92.21</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm80" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>13</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><bold>92.56</bold></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">94.41</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">93.49</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><bold>62.67</bold></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">95.19</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">78.93</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="sensors-17-00198-t006" position="float">
+        <object-id pub-id-type="pii">sensors-17-00198-t006_Table 6</object-id>
+        <label>Table 6</label>
+        <caption>
+          <p>Variation in accuracy and threshold <inline-formula>
+            <mml:math id="mm88" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>T</mml:mi>
+                  <mml:mn>1</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula> after training exclusively with the young but validating with elderly people (test 1), and then training and validating with elderly people (test 2).</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th rowspan="2" align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Feature</th>
+              <th colspan="2" align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">AC (%) with Elderly</th>
+              <th colspan="2" align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Threshold <inline-formula>
+                <mml:math id="mm89" display="block">
+                  <mml:semantics>
+                    <mml:mstyle mathvariant="bold">
+                      <mml:msub>
+                        <mml:mi mathvariant="bold-italic">T</mml:mi>
+                        <mml:mn>1</mml:mn>
+                      </mml:msub>
+                    </mml:mstyle>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula></th>
+            </tr>
+            <tr>
+              <th align="center" valign="middle" style="border-bottom:solid thin">Test 1</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin">Test 2</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin">Test 1</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin">Test 2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm90" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>2</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">87.49</td>
+              <td align="center" valign="middle">90.45 &#xB1; 5.89</td>
+              <td align="center" valign="middle">1.07 &#xB1; 0.029</td>
+              <td align="center" valign="middle">0.97 &#xB1; 0.012</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm91" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>3</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">90.21</td>
+              <td align="center" valign="middle">90.85 &#xB1; 7.25</td>
+              <td align="center" valign="middle">1.48 &#xB1; 0.017</td>
+              <td align="center" valign="middle">1.23 &#xB1; 0.024</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm92" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>8</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">91.72</td>
+              <td align="center" valign="middle">92.36 &#xB1; 6.80</td>
+              <td align="center" valign="middle">0.40 &#xB1; 0.004</td>
+              <td align="center" valign="middle">0.36 &#xB1; 0.003</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm93" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>9</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">92.21</td>
+              <td align="center" valign="middle">92.58 &#xB1; 7.10</td>
+              <td align="center" valign="middle">0.43 &#xB1; 0.009</td>
+              <td align="center" valign="middle">0.36 &#xB1; 0.002</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm94" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>13</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">78.93</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">80.73 &#xB1; 5.62</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">0.08 &#xB1; 9.35 &#xD7; <inline-formula>
+                <mml:math id="mm95" display="block">
+                  <mml:semantics>
+                    <mml:msup>
+                      <mml:mn>10</mml:mn>
+                      <mml:mrow>
+                        <mml:mo>&#x2212;</mml:mo>
+                        <mml:mn>5</mml:mn>
+                      </mml:mrow>
+                    </mml:msup>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">0.07 &#xB1; 0.002</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="sensors-17-00198-t007" position="float">
+        <object-id pub-id-type="pii">sensors-17-00198-t007_Table 7</object-id>
+        <label>Table 7</label>
+        <caption>
+          <p>Specificity (SP) and accuracy (AC) after testing data from all subjects with threshold <inline-formula>
+            <mml:math id="mm101" display="block">
+              <mml:semantics>
+                <mml:msub>
+                  <mml:mi>T</mml:mi>
+                  <mml:mn>2</mml:mn>
+                </mml:msub>
+              </mml:semantics>
+            </mml:math>
+          </inline-formula>.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">Feature</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">SP</th>
+              <th align="center" valign="middle" style="border-bottom:solid thin;border-top:solid thin">AC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm102" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>2</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">32.97 &#xB1; 6.46</td>
+              <td align="center" valign="middle">66.43 &#xB1; 3.06</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm103" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>3</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">59.04 &#xB1; 5.56</td>
+              <td align="center" valign="middle">79.49 &#xB1; 2.70</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm104" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>8</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">38.34 &#xB1; 5.58</td>
+              <td align="center" valign="middle">69.14 &#xB1; 2.71</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle"><inline-formula>
+                  <mml:math id="mm105" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>9</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle">67.97 &#xB1; 2.86</td>
+              <td align="center" valign="middle"><bold>83.96 &#xB1; 1.37</bold></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin"><inline-formula>
+                  <mml:math id="mm106" display="block">
+                    <mml:semantics>
+                      <mml:msub>
+                        <mml:mi>C</mml:mi>
+                        <mml:mn>13</mml:mn>
+                      </mml:msub>
+                    </mml:semantics>
+                  </mml:math>
+                </inline-formula></td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">37.80 &#xB1; 3.42</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">68.88 &#xB1; 1.69</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+    </sec>
+  </back>
+</article>
